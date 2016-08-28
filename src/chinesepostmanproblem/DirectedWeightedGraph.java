@@ -59,6 +59,7 @@ import util.TransformWeightDijkstra;
 
 public class DirectedWeightedGraph implements Cloneable, Serializable {
 
+	private static final long serialVersionUID = 1L;
     DirectedGraph<Vertex, Edge> graph = new DirectedSparseMultigraph<>();
     List<ClosestPathSolution> closestPathSolutions = new ArrayList<>();
     List<Vertex> eulerianPath = new ArrayList<>();
