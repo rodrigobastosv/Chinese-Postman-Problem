@@ -1,6 +1,5 @@
 package chinesepostmanproblem;
 
-//<editor-fold defaultstate="collapsed" desc="Imports">
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -59,7 +58,6 @@ import util.TransformEdgeLabel;
 import util.TransformVertexColor;
 import util.TransformVertexLabel;
 import util.TransformWeightDijkstra;
-//</editor-fold>
 
 public class DirectedWeightedGraph implements Cloneable, Serializable {
 
@@ -70,7 +68,6 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
     IloCplex cplex;
     CplexResult result;
 
-    //<editor-fold defaultstate="collapsed" desc="Read the graph from a file">
     public void readGraph(String path) throws FileNotFoundException, IOException {
         FileReader file = new FileReader(path);
         Scanner scanner = new Scanner(file);
@@ -91,9 +88,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
                     getVertex(vertex1), getVertex(vertex2), EdgeType.DIRECTED);
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Display the graph using JUNG">
     public void displayGraph() throws InterruptedException {
         Layout layout = new ISOMLayout(graph);
         layout.setSize(new Dimension(700, 700)); // sets the initial size of the space        
@@ -127,9 +122,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         frame.setVisible(true);
         runTroughVertices(vv);
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Create a PDF with the report">
     public void createReport(long time) {
         Document document = new Document();
 
@@ -203,16 +196,12 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         document.close();                                                
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Open the PDF report">
     public void openReport() throws IOException {        
         File file = new File("./report.pdf");
         Desktop.getDesktop().open(file);
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Gather information for the report">
     private int getNumberOfDuplicatedEdges() {
         int numberOfDuplicatedEdges = 0;
         for(Edge e : graph.getEdges()) {
@@ -256,9 +245,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return path;
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Run updating the edges of the graph with a timer">
     private void runTroughVertices(VisualizationViewer<Vertex, Edge> vv) {
         Vertex start, end;
         Edge e;
@@ -280,9 +267,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
             Thread.currentThread().interrupt();
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Create a list of the vertices and theirs degrees">
     public List<VertexDegree> createListOfVerticesDegree() {
         List<VertexDegree> listVerticesDegree = new ArrayList<>();
         int inDegree, outDegree;
@@ -294,9 +279,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return listVerticesDegree;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Create solutions for the vertices using Dijkstra's">
     public List<ClosestPathSolution> createListOfClosestPathSolutions() {
         List<ClosestPathSolution> solutions = new ArrayList<>();
         DijkstraShortestPath<Vertex, Edge> d = new DijkstraShortestPath<>(graph, new TransformWeightDijkstra());
@@ -317,9 +300,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         closestPathSolutions = solutions;
         return solutions;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Get closest path beetween vertices using Dijkstra's">
     public List<Vertex> getClosestPath(Vertex n1, Vertex n2) {
         List<Vertex> path = new ArrayList<>();
         DijkstraShortestPath<Vertex, Edge> d = new DijkstraShortestPath<>(graph, new TransformWeightDijkstra());
@@ -333,9 +314,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return path;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Remove the vertices that have in degree equal than out degree">
     public void removeVerticesWithSameDegree() {
         int inDegree, outDegree;
         List<Integer> listVerticesRemoved = new ArrayList();
@@ -350,9 +329,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
             graph.removeVertex(getVertex(i));
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return if the graph is eulerian or not">
     public boolean isEulerian() {
         int inDegree, outDegree;
         for (Vertex v : graph.getVertices()) {            
@@ -364,9 +341,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return true;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return a vertex from a given id">
     private Vertex getVertex(int id) {
         Vertex vertex = null;
         for (Vertex v : graph.getVertices()) {
@@ -376,9 +351,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return vertex;
     }
-    //</editor-fold>        
     
-    //<editor-fold defaultstate="collapsed" desc="Return an Eulerian path using Fleury's algorithm">
     public List<Vertex> findEulerianPathFrom(int s) {
         ArrayList<Vertex> eulerianPath = new ArrayList<>();
         ArrayList<Edge> edges;
@@ -459,9 +432,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return false;
     }
-    //</editor-fold>        
     
-    //<editor-fold defaultstate="collapsed" desc="Add edges to aquire a complete graph">
     public void addEdgesToCompleteGraph() { //weight of edges must be calculated by dijkstra's        
         ClosestPathSolution closestPathSolution = null;
         for (Vertex v : graph.getVertices()) {
@@ -477,9 +448,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
             }
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return an edge given two vertices">
     private Edge getEdge(int n1, int n2) {
         Edge edge = null;
         for (Edge e : graph.getEdges()) {
@@ -501,9 +470,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }        
         return edge;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Search for a Dijkstra solution in the solutions List">
     private ClosestPathSolution getClosestPathSolution(int n1, int n2) {
         ClosestPathSolution solution = null;
         for (ClosestPathSolution cps : closestPathSolutions) {
@@ -513,9 +480,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return solution;
     }
-    //</editor-fold>    
     
-    //<editor-fold defaultstate="collapsed" desc="Duplication of the edges">
     public void duplicateEdges() {
         int v1, v2;
         for (CplexResultVariable variable : result.getVariables()) {
@@ -549,18 +514,14 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         String s = variable.replace("X", "");
         return Integer.parseInt(s.substring(s.length() / 2, s.length()));
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Print the difference of in and out degree of the vertices">
     public void printDiffDegreeInOut() {
         for(Vertex v : graph.getVertices()) {
             System.out.print(v + ": ");
             System.out.println(graph.getInEdges(v).size() - graph.getOutEdges(v).size());
         }
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Generation of the String of the Mathematical Model">
     public void generateMathematicalModel() {
         String mathematicalModel = "";
         mathematicalModel += generateObjectiveFunction();
@@ -647,9 +608,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         String format = "%0" + size + "d";
         return String.format(format, id);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation the Mathematical Model using CPLEX">
     public void generateSolveMathematicalModelCplex() throws IloException {
         cplex = new IloCplex();
         IloNumVar[] variables = new IloNumVar[graph.getEdgeCount()];
@@ -734,9 +693,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
             }
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Find a vertex in the list of vertices degree">
     private VertexDegree findVertexDegree(Vertex v) {
         VertexDegree vertexDegree = null;
         for (VertexDegree vd : verticesDegree) {
@@ -746,12 +703,9 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return vertexDegree;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public DirectedWeightedGraph() {
     }
-    //</editor-fold>
 
     public static void main(String args[]) throws IOException, CloneNotSupportedException, IloException, InterruptedException {
         DirectedWeightedGraph graph = new DirectedWeightedGraph();
@@ -781,7 +735,6 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         visualizationGraph.openReport();
     }
     
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public List<ClosestPathSolution> getClosestPathSolutions() {
         return closestPathSolutions;
     }
@@ -813,9 +766,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
     public void setVerticesDegree(List<VertexDegree> verticesDegree) {
         this.verticesDegree = verticesDegree;
     }
-    //</editor-fold>    
 
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     @Override
     public Object clone() throws CloneNotSupportedException {
         ObjectOutputStream out = null;
@@ -845,5 +796,4 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         }
         return null;
     }
-    //</editor-fold>
 }
