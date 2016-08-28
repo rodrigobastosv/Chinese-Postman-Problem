@@ -1,6 +1,5 @@
 package chinesepostmanproblem;
 
-//<editor-fold defaultstate="collapsed" desc="Imports">
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -9,7 +8,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.SparseMultigraph;
@@ -52,24 +50,22 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import util.TransformEdgeColor;
 import util.TransformEdgeLabel;
 import util.TransformVertexColor;
 import util.TransformVertexLabel;
 import util.TransformWeightDijkstra;
-//</editor-fold>
 
 public class MixedWeightedGraph implements Cloneable, Serializable {
 
-    SparseMultigraph<Vertex, Edge> graph = new SparseMultigraph<>();
+	private static final long serialVersionUID = 1L;
+	SparseMultigraph<Vertex, Edge> graph = new SparseMultigraph<>();
     List<ClosestPathSolution> closestPathSolutions = new ArrayList<>();
     List<Vertex> eulerianPath = new ArrayList<>();
     List<VertexDegree> verticesDegree = new ArrayList<>();
     IloCplex cplex;
     CplexResult result;
 
-    //<editor-fold defaultstate="collapsed" desc="Read the graph from a file">
     public void readGraph(String path) throws FileNotFoundException, IOException {
         FileReader file = new FileReader(path);
         Scanner scanner = new Scanner(file);
@@ -93,10 +89,9 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
                         getVertex(vertex1), getVertex(vertex2), EdgeType.UNDIRECTED);
             }
         }
+        scanner.close();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Display the graph using JUNG">
     public void displayGraph() throws InterruptedException {
         //Layout layout = new ISOMLayout(graph);
         Layout layout = new FRLayout(graph);
@@ -131,9 +126,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         frame.setVisible(true);
         runTroughVertices(vv);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Transform all edges of the graph to oriented">
     public void transformInOriented() {
         List<Edge> edgesToRemove = new ArrayList<>();
         for (Edge e : graph.getEdges()) {
@@ -151,9 +144,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
             graph.addEdge(new Edge(v2, v1, weight), v2, v1, EdgeType.DIRECTED);
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Create a PDF with the report">
     public void createReport(long time) {
         Document document = new Document();
 
@@ -227,16 +218,12 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         document.close();                                                
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Open the PDF report">
     public void openReport() throws IOException {        
         File file = new File("./report.pdf");
         Desktop.getDesktop().open(file);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gather information for the report">
     private int getNumberOfDuplicatedEdges() {
         int numberOfDuplicatedEdges = 0;
         for (Edge e : graph.getEdges()) {
@@ -280,9 +267,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return path;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Run updating the edges of the graph with a timer">
     private void runTroughVertices(VisualizationViewer<Vertex, Edge> vv) {
         Vertex start, end;
         Edge e;
@@ -304,9 +289,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
             Thread.currentThread().interrupt();
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Create a list of the vertices and theirs degrees">
     public List<VertexDegree> createListOfVerticesDegree() {
         List<VertexDegree> listVerticesDegree = new ArrayList<>();
         int inDegree, outDegree;
@@ -318,9 +301,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return listVerticesDegree;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Create solutions for the vertices using Dijkstra's">
     public List<ClosestPathSolution> createListOfClosestPathSolutions() {
         List<ClosestPathSolution> solutions = new ArrayList<>();
         DijkstraShortestPath<Vertex, Edge> d = new DijkstraShortestPath<>(graph, new TransformWeightDijkstra());
@@ -341,9 +322,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         closestPathSolutions = solutions;
         return solutions;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Get closest path beetween vertices using Dijkstra's">
     public List<Vertex> getClosestPath(Vertex n1, Vertex n2) {
         List<Vertex> path = new ArrayList<>();
         DijkstraShortestPath<Vertex, Edge> d = new DijkstraShortestPath<>(graph, new TransformWeightDijkstra());
@@ -357,12 +336,10 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return path;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Remove the vertices that have in degree equal than out degree">
     public void removeVerticesWithSameDegree() {
         int inDegree, outDegree;
-        List<Integer> listVerticesRemoved = new ArrayList();
+        List<Integer> listVerticesRemoved = new ArrayList<Integer>();
         for (Vertex v : graph.getVertices()) {
             inDegree = graph.getInEdges(v).size();
             outDegree = graph.getOutEdges(v).size();
@@ -374,9 +351,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
             graph.removeVertex(getVertex(i));
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return if the graph is eulerian or not">
     public boolean isEulerian() {
         int inDegree, outDegree;
         for (Vertex v : graph.getVertices()) {
@@ -388,9 +363,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return true;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return a vertex from a given id">
     private Vertex getVertex(int id) {
         Vertex vertex = null;
         for (Vertex v : graph.getVertices()) {
@@ -400,9 +373,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return vertex;
     }
-    //</editor-fold>        
 
-    //<editor-fold defaultstate="collapsed" desc="Return an Eulerian path using Fleury's algorithm">
     public List<Vertex> findEulerianPathFrom(int s) {
         ArrayList<Vertex> eulerianPath = new ArrayList<>();
         ArrayList<Edge> edges;
@@ -483,9 +454,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return false;
     }
-    //</editor-fold>        
 
-    //<editor-fold defaultstate="collapsed" desc="Add edges to aquire a complete graph">
     public void addEdgesToCompleteGraph() { //weight of edges must be calculated by dijkstra's        
         ClosestPathSolution closestPathSolution = null;
         for (Vertex v : graph.getVertices()) {
@@ -501,9 +470,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
             }
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return an edge given two vertices">
     private Edge getEdge(int n1, int n2) {
         Edge edge = null;
         for (Edge e : graph.getEdges()) {
@@ -525,9 +492,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return edge;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Search for a Dijkstra solution in the solutions List">
     private ClosestPathSolution getClosestPathSolution(int n1, int n2) {
         ClosestPathSolution solution = null;
         for (ClosestPathSolution cps : closestPathSolutions) {
@@ -537,9 +502,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return solution;
     }
-    //</editor-fold>    
 
-    //<editor-fold defaultstate="collapsed" desc="Duplication of the edges">
     public void duplicateEdges() {
         int v1, v2;
         for (CplexResultVariable variable : result.getVariables()) {
@@ -573,18 +536,14 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         String s = variable.replace("X", "");
         return Integer.parseInt(s.substring(s.length() / 2, s.length()));
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Print the difference of in and out degree of the vertices">
     public void printDiffDegreeInOut() {
         for (Vertex v : graph.getVertices()) {
             System.out.print(v + ": ");
             System.out.println(graph.getInEdges(v).size() - graph.getOutEdges(v).size());
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation of the String of the Mathematical Model">
     public void generateMathematicalModel() {
         String mathematicalModel = "";
         mathematicalModel += generateObjectiveFunction();
@@ -671,9 +630,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         String format = "%0" + size + "d";
         return String.format(format, id);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation the Mathematical Model using CPLEX">
     public void generateSolveMathematicalModelCplex() throws IloException {
         cplex = new IloCplex();
         IloNumVar[] variables = new IloNumVar[graph.getEdgeCount()];
@@ -758,9 +715,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
             }
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Find a vertex in the list of vertices degree">
     private VertexDegree findVertexDegree(Vertex v) {
         VertexDegree vertexDegree = null;
         for (VertexDegree vd : verticesDegree) {
@@ -770,12 +725,9 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return vertexDegree;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public MixedWeightedGraph() {
     }
-    //</editor-fold>
     
     public static void main(String args[]) throws IOException, CloneNotSupportedException, IloException, InterruptedException {
         MixedWeightedGraph graph = new MixedWeightedGraph();
@@ -806,7 +758,6 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         visualizationGraph.openReport();        
     }    
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public List<ClosestPathSolution> getClosestPathSolutions() {
         return closestPathSolutions;
     }
@@ -838,9 +789,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
     public void setVerticesDegree(List<VertexDegree> verticesDegree) {
         this.verticesDegree = verticesDegree;
     }
-    //</editor-fold>    
 
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     @Override
     public Object clone() throws CloneNotSupportedException {
         ObjectOutputStream out = null;
@@ -870,5 +819,4 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         }
         return null;
     }
-    //</editor-fold> 
 }
