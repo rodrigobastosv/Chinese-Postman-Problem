@@ -73,12 +73,9 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     String rootDir = System.getProperty("user.dir");
     static long t0, t1;
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public UndirectedWeightedGraph() {
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Read the graph from a file">
     public void readGraph(String path) throws FileNotFoundException, IOException {
         FileReader file = new FileReader(path);
         Scanner scanner = new Scanner(file);
@@ -98,11 +95,10 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             graph.addEdge(new Edge(getVertex(vertex1), getVertex(vertex2), weight),
                     getVertex(vertex1), getVertex(vertex2), EdgeType.UNDIRECTED);
         }
+        scanner.close();
         decideToUseEdmondsAlgorithm(graph, getNumberOddVertices());
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Duplication of the edges via Edmonds">
     public void duplicateEdgesEdmonds(String path) throws FileNotFoundException {
         FileReader file = new FileReader(path);
         Scanner scanner = new Scanner(file);
@@ -116,14 +112,11 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
                 }
             }
         }
+        scanner.close();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation of the graph file for the edmonds algorithm">
-    public void prepareEdmondsGraphFile(String path) throws FileNotFoundException, IOException {
-        FileReader file = new FileReader(path);
+    public void prepareEdmondsGraphFile() throws FileNotFoundException, IOException {
         FileWriter fileW = new FileWriter("./edmondsStuff/GRAPH.txt");
-        Scanner scanner = new Scanner(file);
         PrintWriter writer = new PrintWriter(fileW);
 
         writeGraphFileInit(writer);
@@ -162,6 +155,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             int weight = Integer.parseInt(scanner.next());
             pw.println(String.format("%2s", vertex1) + " " + String.format("%2s", vertex2) + " " + String.format("%3s", weight));
         }
+        scanner.close();
     }
 
     private void writeStartVertex(PrintWriter pw) {
@@ -173,9 +167,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         pw.flush();
         pw.close();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Decide if Edmonds Algorithm will be used">
     public void decideToUseEdmondsAlgorithm(UndirectedGraph<Vertex, Edge> graph, int numVerticesOddDegree) {
         if (numVerticesOddDegree > 33) { //CPLEX free allows 1000 variables (33*33)
             setUseEdmondsAlgorithm(true);
@@ -183,9 +175,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             setUseEdmondsAlgorithm(false);
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return a vector with the num of incidente arcs os each vertex">
     private int[] returnNumIncidentsArcs() {
         int[] numIncidentsArcs = new int[graph.getVertexCount() + 1];
         for (Vertex v : graph.getVertices()) {
@@ -193,9 +183,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return numIncidentsArcs;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return the number of odd vertices in the graph">
     public int getNumberOddVertices() {
         int n = 0;
         for (Vertex v : graph.getVertices()) {
@@ -205,9 +193,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return n;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Display the graph using JUNG">
     public void displayGraph() throws InterruptedException {
         Layout layout = new ISOMLayout(graph);
         layout.setSize(new Dimension(700, 700)); // sets the initial size of the space        
@@ -241,9 +227,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         frame.setVisible(true);
         runTroughVertices(vv,layout);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return if the graph is eulerian or not">
     public boolean isEulerian() {
         for (Vertex v : graph.getVertices()) {
             if ((graph.degree(v) % 2) != 0) {
@@ -252,9 +236,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return true;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Create a PDF with the report">
     public void createReport(long time) {
         Document document = new Document();
 
@@ -335,16 +317,12 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         document.close();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Open the PDF report">
     public void openReport() throws IOException {
         File file = new File("./report.pdf");
         Desktop.getDesktop().open(file);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gather information for the report">
     private int getNumberOfDuplicatedEdges() {
         int numberOfDuplicatedEdges = 0;
         for (Edge e : graph.getEdges()) {
@@ -398,9 +376,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return path;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Run updating the edges of the graph with a timer">
     private void runTroughVertices(VisualizationViewer<Vertex, Edge> vv, Layout layout) {
         Vertex start, end;
         Edge e;
@@ -426,11 +402,9 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             Thread.currentThread().interrupt();
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Remove the vertices that have even degree">
     public void removeVerticesWithEvenDegree() {
-        List<Integer> listVerticesRemoved = new ArrayList();
+        List<Integer> listVerticesRemoved = new ArrayList<Integer>();
         for (Vertex v : graph.getVertices()) {
             if ((graph.degree(v) % 2) == 0) {
                 listVerticesRemoved.add(v.getId());
@@ -440,9 +414,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             graph.removeVertex(getVertex(i));
         }
     }
-    //</editor-fold> 
 
-    //<editor-fold defaultstate="collapsed" desc="Create solutions for the vertices using Dijkstra's">
     public List<ClosestPathSolution> createListOfClosestPathSolutions() {
         List<ClosestPathSolution> solutions = new ArrayList<>();
         DijkstraShortestPath<Vertex, Edge> d = new DijkstraShortestPath<>(graph, new TransformWeightDijkstra());
@@ -461,9 +433,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         closestPathSolutions = solutions;
         return solutions;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Get closest path beetween vertices using Dijkstra's">
     public List<Vertex> getClosestPath(Vertex n1, Vertex n2) {
         List<Vertex> path = new ArrayList<>();
         DijkstraShortestPath<Vertex, Edge> d = new DijkstraShortestPath<>(graph, new TransformWeightDijkstra());
@@ -477,9 +447,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return path;
     }
-    //</editor-fold>              
 
-    //<editor-fold defaultstate="collapsed" desc="Search for a Dijkstra solution in the solutions List">
     private ClosestPathSolution getClosestPathSolution(int n1, int n2) {
         ClosestPathSolution solution = null;
         for (ClosestPathSolution cps : closestPathSolutions) {
@@ -489,12 +457,9 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return solution;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Add edges to aquire a complete graph">
     public void addEdgesToCompleteGraph() { //weight of edges must be calculated by dijkstra's        
         ClosestPathSolution closestPathSolution = null;
-        BellmanFordSolution bellmanFordSolution = null;
         for (Vertex v : graph.getVertices()) {
             for (Vertex otherV : graph.getVertices()) {
                 if (v.getId() != otherV.getId() && v.getId() < otherV.getId()) {
@@ -508,9 +473,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             }
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Print the graph in a readable way">
     public void printGraph() {
         System.out.println("Number of Vertices: " + graph.getVertexCount());
         System.out.println("Number of Edges: " + graph.getEdgeCount());
@@ -529,9 +492,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             System.out.println(e.getNode1().getId() + "-" + e.getNode2().getId() + ":" + e.getWeight() + "(" + e.isDuplicated() + ")");
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Duplication of the edges">
     public void duplicateEdges() {
         int v1, v2;
         for (CplexResultVariable variable : result.getVariables()) {
@@ -547,7 +508,6 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
     }
 
-    //private void duplicateEdgeFromSolution(BellmanFordSolution bfs) {
     private void duplicateEdgeFromSolution(ClosestPathSolution cps) {
         Edge e = new Edge();
         for (int i = 0; i < cps.getShortestPath().size() - 1; i++) {
@@ -566,9 +526,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         String s = variable.replace("X", "");
         return Integer.parseInt(s.substring(s.length() / 2, s.length()));
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return a vertex from a given id">
     private Vertex getVertex(int id) {
         Vertex vertex = null;
         for (Vertex v : graph.getVertices()) {
@@ -578,9 +536,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return vertex;
     }
-    //</editor-fold>          
 
-    //<editor-fold defaultstate="collapsed" desc="Return an Eulerian path using Fleury's algorithm">
     public List<Vertex> findEulerianPathFrom(int s) {
         ArrayList<Vertex> eulerianPath = new ArrayList<>();
         ArrayList<Edge> edges;
@@ -658,9 +614,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return false;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Return an edge given two vertices">
     private Edge getEdge(int n1, int n2) {
         Edge edge = null;
         for (Edge e : graph.getEdges()) {
@@ -695,9 +649,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return edge;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation of the String of the Mathematical Model">
     public void generateMathematicalModel() {
         String mathematicalModel = "";
         mathematicalModel += generateObjectiveFunction();
@@ -772,9 +724,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         String format = "%0" + size + "d";
         return String.format(format, id);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation the Mathematical Model using CPLEX">
     public void generateSolveMathematicalModelCplex() throws IloException {
         cplex = new IloCplex();
         IloNumVar[] variables = new IloNumVar[graph.getEdgeCount()];
@@ -828,13 +778,8 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     }
 
     private void addRestrictionsModelCplex(IloLinearNumExpr objective, List<IloRange> constraints, IloNumVar[] variables) throws IloException {
-        List<String> restrictionsNames;
-        String restrictionName;
         IloLinearNumExpr ils;
         for (Vertex v : graph.getVertices()) {
-            IloNumExpr expressao;
-            IloNumVar[] vars = new IloNumVar[3];
-            restrictionsNames = new ArrayList<>();
             ils = cplex.linearNumExpr();
             for (Vertex vAdj : graph.getNeighbors(v)) {
                 for (IloNumVar var : variables) {
@@ -846,9 +791,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             constraints.add(cplex.addEq(ils, 1));
         }
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Generation of the DOT file of the graph">
     public void generateDotFile(String filename) throws IOException {
         FileWriter dotGraphFile = new FileWriter(filename);
         dotGraphFile.write("graph G{\n");
@@ -864,18 +807,14 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         dotGraphFile.write("}");
         dotGraphFile.close();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Find Eulerian Graph using Edmonds">
     private void findEulerianGraphUsingEdmonds(UndirectedWeightedGraph graph) throws IOException {
-        graph.prepareEdmondsGraphFile("./samples/Undirected/GRAPH.txt");
+        graph.prepareEdmondsGraphFile();
         String pathScript = graph.getRootDir() + "/bin/script.sh";
-        Process p = Runtime.getRuntime().exec(pathScript);
+        Runtime.getRuntime().exec(pathScript);
         graph.duplicateEdgesEdmonds("./edmondsStuff/XIMBIL");
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Find Eulerian Graph using LP">
     private void findEulerianGraphUsingLinearProgramming(UndirectedWeightedGraph graph) throws CloneNotSupportedException, IloException {
         UndirectedWeightedGraph oddDegreeVerticesGraph = (UndirectedWeightedGraph) graph.clone();
         oddDegreeVerticesGraph.removeVerticesWithEvenDegree();
@@ -886,9 +825,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         graph.setResult(oddDegreeVerticesGraph.getResult()); //put the result inside of the original graph                        
         graph.duplicateEdges(); //duplicate the edges to get an eulerian graph
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Visualization of the Graph">
     private UndirectedWeightedGraph visualizationOfGraph(UndirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
         UndirectedWeightedGraph visualizationGraph = (UndirectedWeightedGraph) graph.clone();
         visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
@@ -896,17 +833,13 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         visualizationGraph.displayGraph();
         return visualizationGraph;
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Visualization of the Report">
     private void visualizationOfReport(UndirectedWeightedGraph graph, long initTimer, long endTimer) throws CloneNotSupportedException, IOException {
         UndirectedWeightedGraph reportGraph = (UndirectedWeightedGraph) graph.clone();
         reportGraph.createReport(endTimer - initTimer);
         reportGraph.openReport();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public boolean isUseEdmondsAlgorithm() {
         return useEdmondsAlgorithm;
     }
@@ -954,9 +887,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     public void setResult(CplexResult result) {
         this.result = result;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     @Override
     public Object clone() throws CloneNotSupportedException {
         ObjectOutputStream out = null;
@@ -986,7 +917,6 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         }
         return null;
     }
-    //</editor-fold>
     
     public static void main(String args[]) throws IOException, CloneNotSupportedException, IloException, InterruptedException {
         UndirectedWeightedGraph graph = new UndirectedWeightedGraph();
