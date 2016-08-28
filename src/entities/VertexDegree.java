@@ -42,7 +42,6 @@ public class VertexDegree implements Cloneable, Serializable {
         this.outDegree = outDegree;
     }            
     
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     public Object clone() {
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
@@ -71,5 +70,4 @@ public class VertexDegree implements Cloneable, Serializable {
         }
         return null;
     }    
-    //</editor-fold>
 }

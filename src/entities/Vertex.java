@@ -1,13 +1,11 @@
 package entities;
 
-//<editor-fold defaultstate="collapsed" desc="Imports">
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-//</editor-fold>
 
 public class Vertex implements Cloneable, Serializable {
     private Integer id;
@@ -15,13 +13,10 @@ public class Vertex implements Cloneable, Serializable {
     public Vertex prev;   // Bellman-Ford
     public boolean visited; // BFS
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public Vertex(Integer id) {
         this.id = id;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public Integer getId() {
         return id;
     }
@@ -53,9 +48,7 @@ public class Vertex implements Cloneable, Serializable {
     public void setVisited(boolean visited) {
         this.visited = visited;
     }    
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     public Object clone() {
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
@@ -89,5 +82,4 @@ public class Vertex implements Cloneable, Serializable {
     public String toString() {
         return String.valueOf(id);
     }
-    //</editor-fold>
 }

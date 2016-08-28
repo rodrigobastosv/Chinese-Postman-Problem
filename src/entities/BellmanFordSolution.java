@@ -1,9 +1,7 @@
 package entities;
 
-//<editor-fold defaultstate="collapsed" desc="Imports">
 import java.io.Serializable;
 import java.util.List;
-//</editor-fold>
 
 @Deprecated
 public class BellmanFordSolution implements Serializable {
@@ -12,16 +10,13 @@ public class BellmanFordSolution implements Serializable {
     int weight;
     List<Vertex> shortestPath;
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public BellmanFordSolution(Vertex beginVertex, Vertex endVertex, int weight, List<Vertex> shortestPath) {
         this.beginVertex = beginVertex;
         this.endVertex = endVertex;
         this.weight = weight;
         this.shortestPath = shortestPath;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public Vertex getBeginVertex() {
         return beginVertex;
     }
@@ -53,9 +48,7 @@ public class BellmanFordSolution implements Serializable {
     public void setShortestPath(List<Vertex> shortestPath) {
         this.shortestPath = shortestPath;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     @Override
     public String toString() {
         String s = "";
@@ -64,5 +57,4 @@ public class BellmanFordSolution implements Serializable {
         s += " e o caminho é: " + getShortestPath();
         return s;
     }
-    //</editor-fold>
 }

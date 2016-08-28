@@ -13,16 +13,13 @@ public class ClosestPathSolution implements Serializable {
     int weight;
     List<Vertex> shortestPath;
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public ClosestPathSolution(Vertex beginVertex, Vertex endVertex, int weight, List<Vertex> shortestPath) {
         this.beginVertex = beginVertex;
         this.endVertex = endVertex;
         this.weight = weight;
         this.shortestPath = shortestPath;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public Vertex getBeginVertex() {
         return beginVertex;
     }
@@ -54,9 +51,7 @@ public class ClosestPathSolution implements Serializable {
     public void setShortestPath(List<Vertex> shortestPath) {
         this.shortestPath = shortestPath;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     @Override
     public String toString() {
         String s = "";
@@ -65,5 +60,4 @@ public class ClosestPathSolution implements Serializable {
         s += " e o caminho é: " + getShortestPath();
         return s;
     }
-    //</editor-fold>
 }

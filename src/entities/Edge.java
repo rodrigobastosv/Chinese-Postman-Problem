@@ -1,7 +1,5 @@
 package entities;
 
-//<editor-fold defaultstate="collapsed" desc="Imports">
-import ilog.cplex.IloCplex;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
-//</editor-fold>
 
 public class Edge implements Cloneable, Serializable {    
     private Vertex node1, node2;
@@ -19,7 +16,6 @@ public class Edge implements Cloneable, Serializable {
     private boolean visited;
     private int hash;
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">  
     public Edge() {
         this.hash = hashCode() + new Random().nextInt();
     }
@@ -53,9 +49,7 @@ public class Edge implements Cloneable, Serializable {
         this.duplicated = duplicated;
         this.hash = hashCode() + new Random().nextInt();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public Vertex getNode1() {
         return node1;
     }
@@ -103,9 +97,7 @@ public class Edge implements Cloneable, Serializable {
     public void setDuplicated(boolean duplicated) {
         this.duplicated = duplicated;
     }    
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Overrides">    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -174,5 +166,4 @@ public class Edge implements Cloneable, Serializable {
         }
         return true;
     }
-    //</editor-fold>     
 }

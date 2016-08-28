@@ -1,6 +1,5 @@
 package entities;
 
-//<editor-fold defaultstate="collapsed" desc="Imports">
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,20 +7,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
-//</editor-fold>
 
 public class CplexResult implements Serializable {
     private int objectiveFunctionValue;
     private List<CplexResultVariable> variables;
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public CplexResult(int objectiveFunctionValue, List<CplexResultVariable> variables) {
         this.objectiveFunctionValue = objectiveFunctionValue;
         this.variables = variables;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public int getObjectiveFunctionValue() {
         return objectiveFunctionValue;
     }
@@ -37,9 +32,7 @@ public class CplexResult implements Serializable {
     public void setVariables(List<CplexResultVariable> variables) {
         this.variables = variables;
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     public Object clone() {
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
@@ -68,5 +61,4 @@ public class CplexResult implements Serializable {
         }
         return null;
     }
-    //</editor-fold>
 }

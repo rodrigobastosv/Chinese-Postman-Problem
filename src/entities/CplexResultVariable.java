@@ -11,14 +11,11 @@ public class CplexResultVariable implements Serializable {
     private String name;
     private int value;
 
-    //<editor-fold defaultstate="collapsed" desc="Constructors">
     public CplexResultVariable(String name, int value) {
         this.name = name;
         this.value = value;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Gets & Sets">
     public String getName() {
         return name;
     }
@@ -34,9 +31,7 @@ public class CplexResultVariable implements Serializable {
     public void setValue(int value) {
         this.value = value;
     }
-    //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Overrides">
     public Object clone() {
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
@@ -65,5 +60,4 @@ public class CplexResultVariable implements Serializable {
         }
         return null;
     }
-    //</editor-fold>
 }
