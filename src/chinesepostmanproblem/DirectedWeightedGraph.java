@@ -86,6 +86,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
             graph.addEdge(new Edge(getVertex(vertex1), getVertex(vertex2), weight),
                     getVertex(vertex1), getVertex(vertex2), EdgeType.DIRECTED);
         }
+        scanner.close();
     }
 
     public void displayGraph() throws InterruptedException {
