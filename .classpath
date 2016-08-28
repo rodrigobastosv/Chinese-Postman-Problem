@@ -3,23 +3,23 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Downloads/iText-5.0.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/collections-generic-4.01.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/colt-1.2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/concurrent-1.3.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/cplex.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/j3d-core-1.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-3d-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-3d-demos-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-algorithms-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-api-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-graph-impl-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-io-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-jai-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-jai-samples-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-samples-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/jung-visualization-2.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/vecmath-1.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/chinese-postman-problem/dist/lib/wstx-asl-3.2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/collections-generic-4.01.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/colt-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/concurrent-1.3.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/cplex.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/j3d-core-1.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-3d-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-3d-demos-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-algorithms-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-graph-impl-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-io-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-jai-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-jai-samples-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-samples-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/jung-visualization-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/vecmath-1.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rodrigo Bastos/Documents/LIBS_CPP/wstx-asl-3.2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
