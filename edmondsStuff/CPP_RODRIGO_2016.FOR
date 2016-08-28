@@ -1,0 +1,243 @@
+C ***************************************************************      
+C   VERSAO V6.0 DO CPP EM 11-09-2015 : CPP_VV_2015.FOR
+C   Reestruturdo pelo Prof. Clecio Thomaz em 11-setembro-2015
+C   Suporte a Tese de Mestrado do Rodrigo do MACC-UECE
+C **************************************************************
+C
+      PROGRAM MAIN
+      IMPLICIT REAL*8 (A-H,O-Z)
+      IMPLICIT INTEGER*4 (I-M)
+      CHARACTER ARQ(5)*12,NOMERUA*18,LINHA*4
+      INTEGER*4 N,NB(300),KOST(300),INDEX(300),GRAD(300),
+     *TOP,GRAD1(300),MAT(300,10)
+      INTEGER*4 BASIS(300),MEM(300),KA(300),KB(300),SM(300),TMA(300),
+     *        TMB(300),ROTA(300),ARCO(300),INARC(300),CUSTO(300)
+      REAL*8 Y1(300),Y2(300),DPLUS(300),DMINUS(300)
+C
+C      LEITURA DO ARQUIVO DE NOS E CUSTOS RELATIVOS AO ARCOS
+C
+      IF1=1
+      IF2=2
+      IF3=3
+      IF4=4
+      IF5=5
+      IR=6
+      IW=9
+cc      WRITE(*,*) '            PROBLEMA DO CARTEIRO CHINES'
+cc      WRITE(*,*) '            Algoritmo de EDMONDS	'
+cc      WRITE(*,*)
+cc      WRITE(*,*) '>>> ENTRE NOME DO ARQUIVO JOB DO CPP:  '
+cc      READ(*,9000) JOBCPP
+cc      WRITE(*,*)
+C
+C     O JOBCPP DEVE CONTER O NOME DE 5 ARQUIVOS NO FORMATO 5A12 ONDE:
+C     ARQ(1) = ARQUIVO GRAFO
+C     ARQ(2) = ARQUIVO DE RUAS
+C     ARQ(3) = ARQUIVO RELATORIO
+C     ARQ(4) = ARQUIVO MATAUX (MATRIZ AUXILIAR P/ CONST. DO CAMINHO)
+C     ARQ(5) = ARQUIVO CAMINHO
+C
+      OPEN(UNIT=6,FILE='JOBCPP.txt',STATUS='UNKNOWN')
+      READ(6,1)(ARQ(J),J=1,5)
+1     FORMAT(5A12)
+      OPEN(UNIT=IW,FILE=ARQ(3),STATUS='UNKNOWN')
+      OPEN(UNIT=IF4,FILE=ARQ(4),STATUS='UNKNOWN')
+C
+C     ERRO DA MAQUINA
+C
+      EPS = 1.
+ 100  EPS = EPS/2
+      IF ( EPS+1 .GT. 1 ) GOTO 100
+      OPEN(UNIT=IF1,FILE=ARQ(1),STATUS='UNKNOWN')
+      READ(IF1,14) ID
+      IF(ID.NE.99)GOTO 4
+      WRITE(IW,3)
+      STOP
+4     WRITE(IW,10)
+      WRITE(IW,11)
+      WRITE(IW,12)
+C
+C         N = NUMERO DE NHOS E  M = NUMERO DE ARCOS
+C
+      READ(IF1,140) N,M
+140   FORMAT(2I2)
+      READ(IF1,15) (GRAD1(I),I=1,N)
+      INDEX(1)=1
+      IK=0
+      DO 20 I=1,N
+         II=I+1
+         IK=IK+GRAD1(I)
+         INDEX(II)=INDEX(I)+GRAD1(I)
+   20    GRAD(I)=0
+      KOSTEN=0
+      IK=IK/2
+      I1 = 1
+      INARC(1) = 1
+      DO 40 I=1,IK
+         READ(IF1,30) IANF,IEND,IKOST
+         WRITE(IW,30) IANF,IEND,IKOST
+         ARCO(I1) = IANF
+         ARCO(I1+1) = IEND
+         I2 = (I1+1)/2
+         CUSTO(I2) = IKOST
+         IF ((I2.GT.1).AND.(ARCO(I1-2).NE.ARCO(I1))) INARC(IANF) = I1
+         I1 = I1 + 2
+         IND=INDEX(IANF)+GRAD(IANF)
+         NB(IND)=IEND
+         KOST(IND)=IKOST
+         GRAD(IANF)=GRAD(IANF)+1
+         IND=INDEX(IEND)+GRAD(IEND)
+         NB(IND)=IANF
+         KOST(IND)=IKOST
+         GRAD(IEND)=GRAD(IEND)+1
+         KOSTEN=KOSTEN+IKOST
+   40 CONTINUE
+      IK1 = 300
+      TOP=KOSTEN
+      WRITE(IW,44) KOSTEN
+      READ(IF1,14) KURS
+      WRITE(IW,45) KURS
+      CLOSE(IF1)
+      CALL CONNE(IK1,N,NB,INDEX,BASIS,MEM,ICON)
+      IF(ICON.EQ.0) GOTO 998
+      IK1 = 300
+      CALL CPP(IK,IK1,N,M,KST,NB,KOST,INDEX,TOP,BASIS,MEM,KA,KB,
+     *         SM,TMA,TMB,Y1,Y2,DPLUS,DMINUS,KURS,EPS,IW,NDUP,
+     *         ARQ,IF1,IF2)
+
+      WRITE(IW,50)
+      DO 60 I=1,N
+         IANF=INDEX(I)
+         IEND=KB(I)
+         WRITE(IW,55) I,(KOST(J),J=IANF,IEND)
+          WRITE(IF4,555)I,(KOST(J),J=IANF,IEND)
+555       FORMAT(10I4)
+   60 CONTINUE
+      CLOSE(IF4)
+      IEND = KURS
+      DO 70 I =1,NDUP+M+2
+         ROTA(I) = IEND
+         K = KB(IEND)
+         KB(IEND) = KB(IEND) - 1
+         IEND = KOST(K)
+   70 CONTINUE
+      DO 80 K =1,I-2
+         IANF = ROTA(K)
+         IEND = ROTA(K+1)
+         IF (IANF.GT.IEND) THEN
+            ITROCA = IANF
+            IANF = IEND
+            IEND = ITROCA
+         ENDIF
+         I3 = INARC(IANF)
+         I5 = I3+2*GRAD1(IANF)-1
+         DO 85 I4 = I3,I5
+            IF (ARCO(I4+1).EQ.IEND) THEN
+               I5 = (I4+1)/2
+               IKOST = CUSTO(I5)
+               GOTO 78
+            ENDIF
+   85    CONTINUE
+   78    ICUSTO=ICUSTO+IKOST
+80       CONTINUE
+C
+C   FORMACAO DO ARQ(5) ximbil A PARTIR DA MATAUX (arcos duplicados)
+C
+      OPEN(UNIT=IF4,FILE=ARQ(4),STATUS='UNKNOWN')
+      DO 9770 I=1,N
+         READ(IF4,555)(KOST(J),J=1,10)
+           DO 9769 K=1,10
+               MAT(I,K)=KOST(K)
+9769       CONTINUE
+9770  CONTINUE
+      OPEN(UNIT=IF5,FILE=ARQ(5),STATUS='UNKNOWN')
+	   write(if5,81401)
+81401    format(' Arcos Duplicados:',/)
+      I=1
+      IK=1
+           WRITE(IF5,9880)MAT(I,IK)
+9880       FORMAT(I4)
+9881       J=1
+9882       IF(MAT(I,J).NE.0)GOTO 9883
+           WRITE(IF5,9880)MAT(I,J-1)
+           L=I
+           I=MAT(I,J-1)
+           IF(I.EQ.KURS)GOTO 1000
+           MAT(L,J-1)=0
+           GOTO 9881
+9883  IF(J.EQ.10)GOTO 9901
+      J=J+1
+      GOTO 9882
+9901  WRITE(*,*)' mais qe 10 elementos por linha em MATAUX '
+C
+C
+C   *******************************************************	XXXXXXX
+1000  REWIND(IF5) 
+      WRITE(IW,75)
+      ICUSTO=0
+      READ(IF5,9880,END=2000)INIC
+1001  READ(IF5,9880,END=2000)IFIN
+      OPEN(UNIT=IF1,FILE=ARQ(1),STATUS='UNKNOWN')
+      READ(IF1,141)IFLAG
+141   FORMAT(I1)
+      READ(IF1,140)N,M
+        IQ=N/20
+        IR=N-20*IQ
+        IF(IR.NE.0)GOTO 600
+        N1=IQ
+        GOTO 601
+600     N1=IQ+1
+601   DO 602 L1=1,N1
+         READ(IF1,603)LINHA
+603      FORMAT(A4)
+602   CONTINUE
+            ICHAV=0
+604      READ(IF1,30,END=6177)LANF,LEND,LKOST
+         IF(INIC.EQ.LANF.AND.IFIN.EQ.LEND) GOTO 605
+         IF(INIC.EQ.LEND.AND.IFIN.EQ.LANF) GOTO 6050
+         GOTO 604
+6050     ICHAV=ICHAV+1
+605   continue  
+cc605      OPEN(UNIT=IF2,FILE=ARQ(2),STATUS='UNKNOWN')
+cc606         READ(IF2,607,END=608)ICOD,NOMERUA
+cc607           FORMAT(I5,A18)
+cc              IF(ICOD.NE.LCODRUA)GOTO 606
+cc              ICUSTO=ICUSTO+LKOST
+cc              IF(ICHAV.EQ.0) GOTO 609
+cc              WRITE(IW,77)INIC,IFIN,LKOST,ICUSTO,NOMERUA
+cc              GOTO 6177
+cc609         WRITE(IW,77) INIC,IFIN,LKOST,ICUSTO,NOMERUA
+cc            GOTO 6177
+6177   CLOSE(IF1)
+608    CLOSE(IF2)
+       INIC=IFIN
+       GOTO 1001
+C  ************************************************		   XXXXXXXX
+    3 FORMAT(/10X,'FINAL DE ARQUIVO')
+   10 FORMAT(//,10X,43HEXEMPLO TESTE DO C.P.P DE EDMONDS & JOHNSON)
+   11 FORMAT(//,20X,27HPROBLEMA DO CARTEIRO CHINES)
+   12 FORMAT(//,10X,37HLISTA DE ARCOS E OS CUSTOS ASSOCIADOS,//,10X,
+     *'   DE  PARA   CUSTO CDRUA TRAF.',/)
+   14 FORMAT(I1)
+   15 FORMAT(I1,100I2)
+   30 FORMAT(I2,I3,i4)
+cc   35 FORMAT(10X,I5,1X,I5,2X,2I5,I3)
+   44 FORMAT(/,10X,31HSOMATORIO DOS CUSTOS DOS ARCOS:,I6)
+   45 FORMAT(/,10X,31HA ROTA DO CARTEIRO COMECA NO NO,I5,//)
+   50 FORMAT(/,10X,48HCARACTERIZACAO DO PROXIMO NO DA ROTA DO CARTEIRO
+     *,//)
+   55 FORMAT(10X,22HPROXIMO NO LISTA DE NO,I4,1H:,10(I4,1H ))
+   65 FORMAT(////10X,28HCUSTO DOS ARCOS DUPLICADOS :,I8,/,
+     *10X,28HCUSTO DA ROTA DO CARTEIRO  :,I8)
+   75 FORMAT(///15X,16HROTA DO CARTEIRO,//,5X,16H    DE      PARA,
+     *5X,5HCUSTO,5X,15HCUSTO ACUMULADO,'     LOGRADOUROS')
+cc  77 FORMAT(8X,I4,5X,I4,5X,I5,10X,I7,1X,A18)
+  999 FORMAT(1H1,10X,26HERRO: O GRAFO NAO E CONEXO)
+ 9000 FORMAT(A12)
+2000  KOSTEN = KOSTEN + KST
+      WRITE(IW,65) KST,KOSTEN
+      GOTO 2001
+  998 WRITE(IW,999)
+      CLOSE(IW)
+2001  STOP
+      END
