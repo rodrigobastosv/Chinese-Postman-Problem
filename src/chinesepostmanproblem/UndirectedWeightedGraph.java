@@ -128,17 +128,22 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     }
 
     private void writeGraphFileInit(PrintWriter pw) {
-        pw.println("0");
+        pw.println(String.format("%5s","0"));
     }
 
     private void writeGraphNumVerticesAndEdges(PrintWriter pw) {
-        pw.println(graph.getVertexCount() + " " + graph.getEdgeCount());
+        pw.println(String.format("%5s", graph.getVertexCount()) + String.format("%5s", graph.getEdgeCount()));
     }
 
     private void writeNumIncidentsArcs(PrintWriter pw) {
+    	int numPerLine = 20;
         int[] numIncidentArcs = returnNumIncidentsArcs();
         for (int i = 1; i < numIncidentArcs.length; i++) {
-            pw.print(numIncidentArcs[i] + " ");
+        	if(i % numPerLine == 0) {        		
+        		pw.println(String.format("%5s", numIncidentArcs[i]));
+        	} else {
+        		pw.print(String.format("%5s", numIncidentArcs[i]));
+        	}        	
         }
         pw.println();
     }
@@ -151,19 +156,23 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
         while (scanner.hasNext()) {
             int vertex1 = Integer.parseInt(scanner.next());
+            String vertex1F = String.format("%5s", vertex1); 
             int vertex2 = Integer.parseInt(scanner.next());
+            String vertex2F = String.format("%7s", vertex2);
             int weight = Integer.parseInt(scanner.next());
-            pw.println(String.format("%2s", vertex1) + " " + String.format("%2s", vertex2) + " " + String.format("%3s", weight));
+            String weightF = String.format("%8s", weight);
+            
+            pw.println(vertex1F + vertex2F + weightF);
         }
         scanner.close();
     }
 
     private void writeStartVertex(PrintWriter pw) {
-        pw.println("1");
+        pw.println(String.format("%5s", "1"));
     }
 
     private void writeEndFile(PrintWriter pw) {
-        pw.println("99");
+    	pw.println(String.format("%5s", "99"));        
         pw.flush();
         pw.close();
     }
@@ -924,12 +933,12 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         t0 = System.currentTimeMillis();
         graph.readGraph("./samples/Undirected/GRAPH.txt");
         if (!graph.isEulerian()) {
-            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
-            if (graph.isUseEdmondsAlgorithm()) {
+            //graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
+            //if (graph.isUseEdmondsAlgorithm()) {
                 graph.findEulerianGraphUsingEdmonds(graph);
-            } else {
-                graph.findEulerianGraphUsingLinearProgramming(graph);
-            }
+            //} else {
+              //  graph.findEulerianGraphUsingLinearProgramming(graph);
+            //}
         }        
         reportGraph = graph.visualizationOfGraph(graph);
         graph.visualizationOfReport(reportGraph, t0, t1);
