@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Paint;
 import org.apache.commons.collections15.Transformer;
 
+import config.Configurations;
+
 /**
  *
  * @author rodrigo
@@ -12,8 +14,12 @@ import org.apache.commons.collections15.Transformer;
 public class TransformEdgeColor implements Transformer<Edge, Paint> {
     
     public Paint transform(Edge e) {
+    	javafx.scene.paint.Color color = Configurations.EDGES_COLOR;
+    	float RED = (float) color.getRed();
+    	float GREEN = (float) color.getGreen();
+    	float BLUE = (float) color.getBlue();
         if(e.isVisited()) {
-            return Color.YELLOW;
+            return new Color(RED, GREEN, BLUE);
         }
         return Color.RED;
     }
