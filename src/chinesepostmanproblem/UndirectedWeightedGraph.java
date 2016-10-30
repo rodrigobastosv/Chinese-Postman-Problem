@@ -30,13 +30,12 @@ import ilog.concert.IloLinearNumExpr;
 import ilog.concert.IloNumVar;
 import ilog.concert.IloRange;
 import ilog.cplex.IloCplex;
-import java.awt.Color;
+
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
 import java.awt.geom.Point2D;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,7 +44,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -77,7 +75,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
     public UndirectedWeightedGraph() {
     }
-
+    
     public void readGraph(String path) throws FileNotFoundException, IOException {
         FileReader file = new FileReader(path);
         Scanner scanner = new Scanner(file);
@@ -211,7 +209,6 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
         VisualizationViewer<Vertex, Edge> vv = new VisualizationViewer<>(layout);
         vv.setPreferredSize(new Dimension(750, 750)); //Sets the viewing area size
-        vv.setBackground(Color.WHITE);
         HashMap<Key, Object> renderingHints = new HashMap<Key, Object>();
         renderingHints.put(RenderingHints.KEY_ALPHA_INTERPOLATION,
                 RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
@@ -933,22 +930,5 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
             }
         }
         return null;
-    }
-    
-    public static void main(String args[]) throws IOException, CloneNotSupportedException, IloException, InterruptedException {
-        UndirectedWeightedGraph graph = new UndirectedWeightedGraph();
-        UndirectedWeightedGraph reportGraph = new UndirectedWeightedGraph();        
-        t0 = System.currentTimeMillis();
-        graph.readGraph("./samples/Undirected/GRAPH.txt");
-        if (!graph.isEulerian()) {
-            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
-            if (graph.isUseEdmondsAlgorithm()) {
-                graph.findEulerianGraphUsingEdmonds(graph);
-            } else {
-                graph.findEulerianGraphUsingLinearProgramming(graph);
-            }
-        }        
-        reportGraph = graph.visualizationOfGraph(graph);
-        graph.visualizationOfReport(reportGraph, t0, t1);
     }
 }

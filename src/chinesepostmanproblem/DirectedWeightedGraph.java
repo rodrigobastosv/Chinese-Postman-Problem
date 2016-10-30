@@ -707,34 +707,6 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
     public DirectedWeightedGraph() {
     }
 
-    public static void main(String args[]) throws IOException, CloneNotSupportedException, IloException, InterruptedException {
-        DirectedWeightedGraph graph = new DirectedWeightedGraph();
-        DirectedWeightedGraph differentDegreeVerticesGraph = new DirectedWeightedGraph();
-        DirectedWeightedGraph visualizationGraph = new DirectedWeightedGraph();
-        long init = System.currentTimeMillis();
-        graph.readGraph("./samples/Directed/GRAPH.txt");
-        if (!graph.isEulerian()) {
-            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
-            graph.setVerticesDegree(graph.createListOfVerticesDegree());
-
-            differentDegreeVerticesGraph = (DirectedWeightedGraph) graph.clone();
-            differentDegreeVerticesGraph.removeVerticesWithSameDegree();
-            differentDegreeVerticesGraph.setClosestPathSolutions(graph.getClosestPathSolutions());
-            differentDegreeVerticesGraph.addEdgesToCompleteGraph();
-            differentDegreeVerticesGraph.setVerticesDegree(graph.getVerticesDegree());            
-            differentDegreeVerticesGraph.generateSolveMathematicalModelCplex();
-            
-            graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
-            graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
-        }
-        visualizationGraph = (DirectedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
-        long end = System.currentTimeMillis();
-        visualizationGraph.displayGraph();
-        visualizationGraph.createReport(end-init);
-        visualizationGraph.openReport();
-    }
-    
     public List<ClosestPathSolution> getClosestPathSolutions() {
         return closestPathSolutions;
     }

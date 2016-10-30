@@ -729,35 +729,6 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
     public MixedWeightedGraph() {
     }
     
-    public static void main(String args[]) throws IOException, CloneNotSupportedException, IloException, InterruptedException {
-        MixedWeightedGraph graph = new MixedWeightedGraph();
-        MixedWeightedGraph differentDegreeVerticesGraph = new MixedWeightedGraph();
-        MixedWeightedGraph visualizationGraph = new MixedWeightedGraph();
-        long init = System.currentTimeMillis();
-        graph.readGraph("./samples/Mixed/GRAPH.txt");
-        graph.transformInOriented();
-        if (!graph.isEulerian()) {
-            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
-            graph.setVerticesDegree(graph.createListOfVerticesDegree());
-
-            differentDegreeVerticesGraph = (MixedWeightedGraph) graph.clone();
-            differentDegreeVerticesGraph.removeVerticesWithSameDegree();
-            differentDegreeVerticesGraph.setClosestPathSolutions(graph.getClosestPathSolutions());
-            differentDegreeVerticesGraph.addEdgesToCompleteGraph();
-            differentDegreeVerticesGraph.setVerticesDegree(graph.getVerticesDegree());            
-            differentDegreeVerticesGraph.generateSolveMathematicalModelCplex();
-            
-            graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
-            graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
-        }
-        visualizationGraph = (MixedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
-        long end = System.currentTimeMillis();
-        visualizationGraph.displayGraph();
-        visualizationGraph.createReport(end-init);
-        visualizationGraph.openReport();        
-    }    
-
     public List<ClosestPathSolution> getClosestPathSolutions() {
         return closestPathSolutions;
     }
