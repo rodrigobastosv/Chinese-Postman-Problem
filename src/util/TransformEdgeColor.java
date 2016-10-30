@@ -15,6 +15,6 @@ public class TransformEdgeColor implements Transformer<Edge, Paint> {
         if(e.isVisited()) {
             return Color.YELLOW;
         }
-        return Color.BLACK;
+        return Color.RED;
     }
 }
