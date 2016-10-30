@@ -36,6 +36,7 @@ import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
 import java.awt.geom.Point2D;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -817,14 +819,20 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         dotGraphFile.close();
     }
 
-    private void findEulerianGraphUsingEdmonds(UndirectedWeightedGraph graph) throws IOException {
+    public void findEulerianGraphUsingEdmonds(UndirectedWeightedGraph graph) throws IOException {
         graph.prepareEdmondsGraphFile();
-        String pathScript = graph.getRootDir() + "/bin/script.sh";
-        Runtime.getRuntime().exec(pathScript);
+        String application = "cmd /c start /d \"C:\\Users\\Rodrigo Bastos\\workspace\\Chinese Postman Problem\\edmondsStuff\\\" CPP.exe";
+        Process p = Runtime.getRuntime().exec(application);
+        try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         graph.duplicateEdgesEdmonds("./edmondsStuff/XIMBIL");
     }
 
-    private void findEulerianGraphUsingLinearProgramming(UndirectedWeightedGraph graph) throws CloneNotSupportedException, IloException {
+    public void findEulerianGraphUsingLinearProgramming(UndirectedWeightedGraph graph) throws CloneNotSupportedException, IloException {
         UndirectedWeightedGraph oddDegreeVerticesGraph = (UndirectedWeightedGraph) graph.clone();
         oddDegreeVerticesGraph.removeVerticesWithEvenDegree();
         oddDegreeVerticesGraph.setClosestPathSolutions(graph.getClosestPathSolutions());
@@ -835,7 +843,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         graph.duplicateEdges(); //duplicate the edges to get an eulerian graph
     }
 
-    private UndirectedWeightedGraph visualizationOfGraph(UndirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
+    public UndirectedWeightedGraph visualizationOfGraph(UndirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
         UndirectedWeightedGraph visualizationGraph = (UndirectedWeightedGraph) graph.clone();
         visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
         t1 = System.currentTimeMillis();
@@ -843,7 +851,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         return visualizationGraph;
     }
     
-    private void visualizationOfReport(UndirectedWeightedGraph graph, long initTimer, long endTimer) throws CloneNotSupportedException, IOException {
+    public void visualizationOfReport(UndirectedWeightedGraph graph, long initTimer, long endTimer) throws CloneNotSupportedException, IOException {
         UndirectedWeightedGraph reportGraph = (UndirectedWeightedGraph) graph.clone();
         reportGraph.createReport(endTimer - initTimer);
         reportGraph.openReport();
@@ -933,12 +941,12 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         t0 = System.currentTimeMillis();
         graph.readGraph("./samples/Undirected/GRAPH.txt");
         if (!graph.isEulerian()) {
-            //graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
-            //if (graph.isUseEdmondsAlgorithm()) {
+            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
+            if (graph.isUseEdmondsAlgorithm()) {
                 graph.findEulerianGraphUsingEdmonds(graph);
-            //} else {
-              //  graph.findEulerianGraphUsingLinearProgramming(graph);
-            //}
+            } else {
+                graph.findEulerianGraphUsingLinearProgramming(graph);
+            }
         }        
         reportGraph = graph.visualizationOfGraph(graph);
         graph.visualizationOfReport(reportGraph, t0, t1);
