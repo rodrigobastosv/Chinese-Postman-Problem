@@ -8,6 +8,7 @@ import java.io.IOException;
 import chinesepostmanproblem.DirectedWeightedGraph;
 import chinesepostmanproblem.MixedWeightedGraph;
 import chinesepostmanproblem.UndirectedWeightedGraph;
+import config.Configurations;
 import ilog.concert.IloException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -23,14 +24,12 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class StartWindow extends Application {
 	File file;
-	UndirectedWeightedGraph undirected = new UndirectedWeightedGraph();
-	DirectedWeightedGraph directed = new DirectedWeightedGraph();
-	MixedWeightedGraph mixed = new MixedWeightedGraph();
 	static long t0, t1;
 
 	public static void main(String args[]) {
@@ -41,9 +40,8 @@ public class StartWindow extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Problema do Carteiro Chinês");
 		
+		/** BUTTONS **/
 		Button btnStart = new Button("Começar");
-		
-		Label lbFilePath = new Label();
 		Button btnGraph = new Button("Grafo");
 		btnGraph.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -51,13 +49,17 @@ public class StartWindow extends Application {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Escolha o arquivo com o grafo");
 				file = fileChooser.showOpenDialog(primaryStage);
-				int lenghtToFit = file.getName().length()<15 ? file.getName().length() : 15;
-				lbFilePath.setText(file.getName().substring(0, lenghtToFit));
+				btnGraph.setText(file.getName().length() > 30 ? file.getName().substring(0, 30) : file.getName());
 			}
 		});
 		
+		/** LABELS **/
 		Label lbPCCType = new Label("Tipo de PCC: ");
+		lbPCCType.setStyle(Configurations.BOLD_STYLE);
 		Label lbEdgeColor = new Label("Cor das Arestas: ");
+		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
+		Label lbGraphFile = new Label("Arquivo do Grafo: ");
+		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
 		
 		ObservableList<String> types = FXCollections.observableArrayList(
 			        "Não Dirigido",
@@ -69,8 +71,9 @@ public class StartWindow extends Application {
 		ColorPicker edgesColor = new ColorPicker();
 		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
 		
+		/** GRID **/
 		GridPane gridPane = new GridPane();
-		gridPane.setStyle("-fx-background: #FFFFFF;");
+		gridPane.setStyle(Configurations.WHITE_BACKGROUND);
 		gridPane.setHgap(20);
 		gridPane.setVgap(20);
 		gridPane.setTranslateX(20);
@@ -78,8 +81,8 @@ public class StartWindow extends Application {
 		gridPane.add(cbPCCType, 1, 0);
 		gridPane.add(lbPCCType, 0, 0);
 		
-		gridPane.add(lbFilePath, 1, 1);
-		gridPane.add(btnGraph, 0, 1);
+		gridPane.add(lbGraphFile, 0, 1);
+		gridPane.add(btnGraph, 1, 1);
 		
 		gridPane.add(lbEdgeColor, 0, 2);
 		gridPane.add(edgesColor, 1, 2);
@@ -95,6 +98,7 @@ public class StartWindow extends Application {
 					return;
 				}
 				primaryStage.hide();
+				Configurations.EDGES_COLOR = edgesColor.getValue();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
 					try {
@@ -122,9 +126,9 @@ public class StartWindow extends Application {
 					alert.showAndWait();
 					return;
 				}
-				System.out.println(edgesColor.getValue());
 			}
 		});
+		btnStart.setStyle(Configurations.BOLD_STYLE);
 		
 		Scene scene = new Scene(gridPane, 400, 200);
 		primaryStage.setScene(scene);
