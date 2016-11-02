@@ -14,15 +14,20 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -60,6 +65,8 @@ public class StartWindow extends Application {
 		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
 		Label lbGraphFile = new Label("Arquivo do Grafo: ");
 		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
+		Label lbEdgeThickness = new Label("Espessura da Arestas: ");
+		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
 		
 		ObservableList<String> types = FXCollections.observableArrayList(
 			        "Não Dirigido",
@@ -70,6 +77,10 @@ public class StartWindow extends Application {
 		
 		ColorPicker edgesColor = new ColorPicker();
 		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
+		
+		ScrollBar edgeThicknessScroll = new ScrollBar();
+		edgeThicknessScroll.setMin(Configurations.MIN_THICKNESS);
+		edgeThicknessScroll.setMax(Configurations.MAX_THICKNESS);
 		
 		/** GRID **/
 		GridPane gridPane = new GridPane();
@@ -87,7 +98,10 @@ public class StartWindow extends Application {
 		gridPane.add(lbEdgeColor, 0, 2);
 		gridPane.add(edgesColor, 1, 2);
 		
-		gridPane.add(btnStart, 3, 3);
+		gridPane.add(lbEdgeThickness, 0, 3);
+		gridPane.add(edgeThicknessScroll, 1, 3);
+		
+		gridPane.add(btnStart, 2, 4);
 		
 		btnStart.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -99,6 +113,7 @@ public class StartWindow extends Application {
 				}
 				primaryStage.hide();
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
 					try {
