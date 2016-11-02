@@ -57,6 +57,7 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import util.TransformEdgeColor;
 import util.TransformEdgeLabel;
+import util.TransformEdgeStroke;
 import util.TransformVertexColor;
 import util.TransformVertexLabel;
 import util.TransformWeightDijkstra;
@@ -225,6 +226,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         ctx.setVertexDrawPaintTransformer(new TransformVertexColor());
         VertexLabel<Vertex, Edge> vl = vv.getRenderer().getVertexLabelRenderer();
         vl.setPosition(Renderer.VertexLabel.Position.CNTR);
+        ctx.setEdgeStrokeTransformer(new TransformEdgeStroke());
         ctx.setEdgeDrawPaintTransformer(new TransformEdgeColor());
         ctx.setEdgeLabelTransformer(new TransformEdgeLabel());
 
