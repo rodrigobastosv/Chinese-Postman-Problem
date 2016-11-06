@@ -41,9 +41,9 @@ public class StartWindow extends Application {
 	MixedWeightedGraph reportMixedGraph = new MixedWeightedGraph();
 
 	/** BUTTONS **/
-	Button btnStart = new Button("Comeï¿½ar");
+	Button btnStart = new Button("Começar");
 	Button btnGraph = new Button("Grafo");
-	Button btnReport = new Button("Relatï¿½rio");
+	Button btnReport = new Button("Relatório");
 
 	/** LABELS **/
 	Label lbPCCType = new Label("Tipo de PCC: ");
@@ -53,7 +53,7 @@ public class StartWindow extends Application {
 	
 	/** OUTROS **/
 	ObservableList<String> types = FXCollections.observableArrayList(
-	        "Nï¿½o Dirigido",
+	        "Não Dirigido",
 	        "Dirigido",
 	        "Misto");
 	ComboBox cbPCCType = new ComboBox(types);
@@ -69,9 +69,6 @@ public class StartWindow extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Problema do Carteiro Chinês");
 		
-		/** BUTTONS **/
-		Button btnStart = new Button("Começar");
-		Button btnGraph = new Button("Grafo");
 		btnGraph.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -82,27 +79,19 @@ public class StartWindow extends Application {
 			}
 		});
 		
-		/** LABELS **/
-		Label lbPCCType = new Label("Tipo de PCC: ");
+		btnReport.setDisable(true);
+		btnReport.setStyle(Configurations.BOLD_STYLE);
+		btnStart.setStyle(Configurations.BOLD_STYLE);
+
 		lbPCCType.setStyle(Configurations.BOLD_STYLE);
-		Label lbEdgeColor = new Label("Cor das Arestas: ");
 		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
-		Label lbGraphFile = new Label("Arquivo do Grafo: ");
 		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
-		Label lbEdgeThickness = new Label("Espessura da Arestas: ");
 		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
 		
-		ObservableList<String> types = FXCollections.observableArrayList(
-			        "Não Dirigido",
-			        "Dirigido",
-			        "Misto");
-		ComboBox cbPCCType = new ComboBox(types);
 		cbPCCType.setValue("Não Dirigido");
 		
-		ColorPicker edgesColor = new ColorPicker();
 		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
 		
-		ScrollBar edgeThicknessScroll = new ScrollBar();
 		edgeThicknessScroll.setMin(Configurations.MIN_THICKNESS);
 		edgeThicknessScroll.setMax(Configurations.MAX_THICKNESS);
 		
@@ -125,7 +114,8 @@ public class StartWindow extends Application {
 		gridPane.add(lbEdgeThickness, 0, 3);
 		gridPane.add(edgeThicknessScroll, 1, 3);
 		
-		gridPane.add(btnStart, 2, 4);
+		gridPane.add(btnReport, 0, 5);
+		gridPane.add(btnStart, 0, 4);
 		
 		btnStart.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -135,7 +125,6 @@ public class StartWindow extends Application {
 					alert.showAndWait();
 					return;
 				}
-				primaryStage.hide();
 				Configurations.EDGES_COLOR = edgesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
@@ -165,19 +154,53 @@ public class StartWindow extends Application {
 					alert.showAndWait();
 					return;
 				}
+				btnReport.setDisable(false);
 			}
 		});
-		btnStart.setStyle(Configurations.BOLD_STYLE);
 		
-		Scene scene = new Scene(gridPane, 400, 200);
+		btnReport.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				switch (cbPCCType.getValue().toString()) {
+				case "Não Dirigido":
+					try {
+						UndirectedWeightedGraph.visualizationOfReport(reportUndirectedGraph, t0, t1);
+					} catch (CloneNotSupportedException | IOException e1) {
+						e1.printStackTrace();
+					}
+					break;
+				case "Dirigido":
+					try {
+						DirectedWeightedGraph.visualizationOfReport(reportDirectedGraph, t0, t1);
+					} catch (CloneNotSupportedException | IOException e) {
+						e.printStackTrace();
+					}
+					break;
+				case "Misto":
+					try {
+						MixedWeightedGraph.visualizationOfReport(reportMixedGraph, t0, t1);
+					} catch (CloneNotSupportedException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
+				default:
+					Alert alert = new Alert(AlertType.ERROR, "Escolha um tipo de PCC válido ", ButtonType.OK);
+					alert.showAndWait();
+					return;
+				}
+			}
+			
+		});
+
+		Scene scene = new Scene(gridPane, Configurations.WINDOW_WIDHT, Configurations.WINDOW_HEIGHT);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 	
 	public void runUndirectedCPPSample(File file) throws FileNotFoundException, IOException, CloneNotSupportedException, IloException, InterruptedException {
 		UndirectedWeightedGraph graph = new UndirectedWeightedGraph();
-        UndirectedWeightedGraph reportGraph = new UndirectedWeightedGraph();        
-        t0 = System.currentTimeMillis();
+		t0 = System.currentTimeMillis();
         graph.readGraph(file.getAbsolutePath());
         if (!graph.isEulerian()) {
             graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
@@ -187,15 +210,13 @@ public class StartWindow extends Application {
                 graph.findEulerianGraphUsingLinearProgramming(graph);
             }
         }        
-        reportGraph = graph.visualizationOfGraph(graph);
-        graph.visualizationOfReport(reportGraph, t0, t1);
+        reportUndirectedGraph = graph.visualizationOfGraph(graph);
 	}
 	
 	public void runDirectedCPPSample(File file) throws FileNotFoundException, IOException, CloneNotSupportedException, IloException, InterruptedException {
 		DirectedWeightedGraph graph = new DirectedWeightedGraph();
         DirectedWeightedGraph differentDegreeVerticesGraph = new DirectedWeightedGraph();
-        DirectedWeightedGraph visualizationGraph = new DirectedWeightedGraph();
-        long init = System.currentTimeMillis();
+        t0 = System.currentTimeMillis();
         graph.readGraph(file.getAbsolutePath());
         if (!graph.isEulerian()) {
             graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
@@ -211,19 +232,13 @@ public class StartWindow extends Application {
             graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
             graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
         }
-        visualizationGraph = (DirectedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
-        long end = System.currentTimeMillis();
-        visualizationGraph.displayGraph();
-        visualizationGraph.createReport(end-init);
-        visualizationGraph.openReport();
+        reportDirectedGraph = graph.visualizationOfGraph(graph);
 	}
 
 	public void runMixedCPPSample(File file) throws FileNotFoundException, IOException, CloneNotSupportedException, IloException, InterruptedException {
         MixedWeightedGraph graph = new MixedWeightedGraph();
         MixedWeightedGraph differentDegreeVerticesGraph = new MixedWeightedGraph();
-        MixedWeightedGraph visualizationGraph = new MixedWeightedGraph();
-        long init = System.currentTimeMillis();
+        t0 = System.currentTimeMillis();
         graph.readGraph(file.getAbsolutePath());
         graph.transformInOriented();
         if (!graph.isEulerian()) {
@@ -240,12 +255,7 @@ public class StartWindow extends Application {
             graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
             graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
         }
-        visualizationGraph = (MixedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
-        long end = System.currentTimeMillis();
-        visualizationGraph.displayGraph();
-        visualizationGraph.createReport(end-init);
-        visualizationGraph.openReport(); 
+        reportMixedGraph = graph.visualizationOfGraph(graph);
 	}
 
 }
