@@ -67,6 +67,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
     List<VertexDegree> verticesDegree = new ArrayList<>();
     IloCplex cplex;
     CplexResult result;
+    static long t0, t1;
 
     public void readGraph(String path) throws FileNotFoundException, IOException {
         FileReader file = new FileReader(path);
@@ -212,6 +213,20 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
             }
         }
         return numberOfDuplicatedEdges;
+    }
+    
+    public DirectedWeightedGraph visualizationOfGraph(DirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
+    	DirectedWeightedGraph visualizationGraph = (DirectedWeightedGraph) graph.clone();
+        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
+        t1 = System.currentTimeMillis();
+        visualizationGraph.displayGraph();
+        return visualizationGraph;
+    }
+    
+    public static void visualizationOfReport(DirectedWeightedGraph graph, long initTimer, long endTimer) throws CloneNotSupportedException, IOException {
+    	DirectedWeightedGraph reportGraph = (DirectedWeightedGraph) graph.clone();
+        reportGraph.createReport(endTimer - initTimer);
+        reportGraph.openReport();
     }
     
     private String getStringOfDuplicatedEdges() {
