@@ -54,6 +54,7 @@ import javax.swing.JFrame;
 import util.TransformEdgeColor;
 import util.TransformEdgeLabel;
 import util.TransformEdgeStroke;
+import util.TransformImageEdgeColor;
 import util.TransformVertexColor;
 import util.TransformVertexLabel;
 import util.TransformWeightDijkstra;
@@ -119,11 +120,42 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
         ctx.setEdgeLabelTransformer(new TransformEdgeLabel());
 
         JFrame frame = new JFrame("Eulerian Graph");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(vv);
         frame.pack();
         frame.setVisible(true);
         runTroughVertices(vv);
+    }
+
+    public void imageOfGraph() throws InterruptedException {
+        Layout layout = new ISOMLayout(graph);
+        layout.setSize(new Dimension(700, 700)); // sets the initial size of the space        
+        VisualizationViewer<Vertex, Edge> vv = new VisualizationViewer<>(layout);
+        vv.setPreferredSize(new Dimension(750, 750)); //Sets the viewing area size
+        vv.setBackground(Color.WHITE);
+        HashMap<RenderingHints.Key, Object> renderingHints = new HashMap<RenderingHints.Key, Object>();
+        renderingHints.put(RenderingHints.KEY_ALPHA_INTERPOLATION,
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        renderingHints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        vv.setRenderingHints(renderingHints);
+
+        DefaultModalGraphMouse<Vertex, Edge> graphMouse = new DefaultModalGraphMouse<Vertex, Edge>();
+        vv.setGraphMouse(graphMouse);
+        vv.addKeyListener(graphMouse.getModeKeyListener());
+        GraphZoomScrollPane pane = new GraphZoomScrollPane(vv);
+
+        RenderContext ctx = vv.getRenderContext();
+        ctx.setVertexLabelTransformer(new TransformVertexLabel());
+        ctx.setVertexDrawPaintTransformer(new TransformVertexColor());
+        Renderer.VertexLabel<Vertex, Edge> vl = vv.getRenderer().getVertexLabelRenderer();
+        vl.setPosition(Renderer.VertexLabel.Position.CNTR);
+        ctx.setEdgeStrokeTransformer(new TransformEdgeStroke());
+        ctx.setEdgeDrawPaintTransformer(new TransformImageEdgeColor());
+        ctx.setEdgeLabelTransformer(new TransformEdgeLabel());
+
+        JFrame frame = new JFrame();
+        frame.getContentPane().add(vv);
+        frame.pack();
+        frame.setVisible(true);
     }
     
     public void createReport(long time) {
