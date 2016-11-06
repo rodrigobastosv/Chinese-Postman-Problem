@@ -14,36 +14,35 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class StartWindow extends Application {
 	File file;
 	static long t0, t1;
+	UndirectedWeightedGraph undirectedGraph = new UndirectedWeightedGraph();
+	DirectedWeightedGraph directedGraph = new DirectedWeightedGraph();
+	MixedWeightedGraph mixedGraph = new MixedWeightedGraph();
 	UndirectedWeightedGraph reportUndirectedGraph = new UndirectedWeightedGraph();
 	DirectedWeightedGraph reportDirectedGraph = new DirectedWeightedGraph();
 	MixedWeightedGraph reportMixedGraph = new MixedWeightedGraph();
 
 	/** BUTTONS **/
 	Button btnStart = new Button("Começar");
-	Button btnGraph = new Button("Grafo");
+	Button btnGraphFile = new Button("Arquivo");
 	Button btnReport = new Button("Relatório");
+	Button btnInitialGraph = new Button("Grafo Inicial");
 
 	/** LABELS **/
 	Label lbPCCType = new Label("Tipo de PCC: ");
@@ -69,19 +68,21 @@ public class StartWindow extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Problema do Carteiro Chinês");
 		
-		btnGraph.setOnAction(new EventHandler<ActionEvent>() {
+		btnGraphFile.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Escolha o arquivo com o grafo");
 				file = fileChooser.showOpenDialog(primaryStage);
-				btnGraph.setText(file.getName().length() > 30 ? file.getName().substring(0, 30) : file.getName());
+				btnGraphFile.setText(file.getName().length() > 30 ? file.getName().substring(0, 30) : file.getName());
+				btnInitialGraph.setDisable(false);
 			}
 		});
 		
 		btnReport.setDisable(true);
 		btnReport.setStyle(Configurations.BOLD_STYLE);
 		btnStart.setStyle(Configurations.BOLD_STYLE);
+		btnInitialGraph.setStyle(Configurations.BOLD_STYLE);
 
 		lbPCCType.setStyle(Configurations.BOLD_STYLE);
 		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
@@ -106,7 +107,7 @@ public class StartWindow extends Application {
 		gridPane.add(lbPCCType, 0, 0);
 		
 		gridPane.add(lbGraphFile, 0, 1);
-		gridPane.add(btnGraph, 1, 1);
+		gridPane.add(btnGraphFile, 1, 1);
 		
 		gridPane.add(lbEdgeColor, 0, 2);
 		gridPane.add(edgesColor, 1, 2);
@@ -116,6 +117,8 @@ public class StartWindow extends Application {
 		
 		gridPane.add(btnReport, 0, 5);
 		gridPane.add(btnStart, 0, 4);
+		gridPane.add(btnInitialGraph, 1, 4);
+		btnInitialGraph.setDisable(true);
 		
 		btnStart.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -180,17 +183,45 @@ public class StartWindow extends Application {
 					try {
 						MixedWeightedGraph.visualizationOfReport(reportMixedGraph, t0, t1);
 					} catch (CloneNotSupportedException | IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					break;
-				default:
-					Alert alert = new Alert(AlertType.ERROR, "Escolha um tipo de PCC válido ", ButtonType.OK);
-					alert.showAndWait();
-					return;
 				}
 			}
-			
+		});
+		
+		btnInitialGraph.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
+				switch (cbPCCType.getValue().toString()) {
+				case "Não Dirigido":
+					try {
+						undirectedGraph.readGraph(file.getAbsolutePath());
+						undirectedGraph.imageOfGraph();
+					} catch (IOException  | InterruptedException e) {
+						e.printStackTrace();
+					}
+					break;
+				case "Dirigido":
+					try {
+						directedGraph.readGraph(file.getAbsolutePath());
+						directedGraph.imageOfGraph();
+					} catch (IOException | InterruptedException e) {
+						e.printStackTrace();
+					}
+					break;
+				case "Misto":
+					try {
+						mixedGraph.readGraph(file.getAbsolutePath());
+						mixedGraph.imageOfGraph();
+					} catch (IOException | InterruptedException e) {
+						e.printStackTrace();
+					}
+					break;
+				}
+			}
 		});
 
 		Scene scene = new Scene(gridPane, Configurations.WINDOW_WIDHT, Configurations.WINDOW_HEIGHT);
