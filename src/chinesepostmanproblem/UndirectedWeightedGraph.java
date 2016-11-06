@@ -850,7 +850,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         return visualizationGraph;
     }
     
-    public void visualizationOfReport(UndirectedWeightedGraph graph, long initTimer, long endTimer) throws CloneNotSupportedException, IOException {
+    public static void visualizationOfReport(UndirectedWeightedGraph graph, long initTimer, long endTimer) throws CloneNotSupportedException, IOException {
         UndirectedWeightedGraph reportGraph = (UndirectedWeightedGraph) graph.clone();
         reportGraph.createReport(endTimer - initTimer);
         reportGraph.openReport();
