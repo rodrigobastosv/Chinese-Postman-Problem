@@ -36,7 +36,31 @@ import javafx.stage.Stage;
 public class StartWindow extends Application {
 	File file;
 	static long t0, t1;
+	UndirectedWeightedGraph reportUndirectedGraph = new UndirectedWeightedGraph();
+	DirectedWeightedGraph reportDirectedGraph = new DirectedWeightedGraph();
+	MixedWeightedGraph reportMixedGraph = new MixedWeightedGraph();
 
+	/** BUTTONS **/
+	Button btnStart = new Button("Come�ar");
+	Button btnGraph = new Button("Grafo");
+	Button btnReport = new Button("Relat�rio");
+
+	/** LABELS **/
+	Label lbPCCType = new Label("Tipo de PCC: ");
+	Label lbEdgeColor = new Label("Cor das Arestas: ");
+	Label lbGraphFile = new Label("Arquivo do Grafo: ");
+	Label lbEdgeThickness = new Label("Espessura da Arestas: ");
+	
+	/** OUTROS **/
+	ObservableList<String> types = FXCollections.observableArrayList(
+	        "N�o Dirigido",
+	        "Dirigido",
+	        "Misto");
+	ComboBox cbPCCType = new ComboBox(types);
+
+	ColorPicker edgesColor = new ColorPicker();
+	ScrollBar edgeThicknessScroll = new ScrollBar();
+	
 	public static void main(String args[]) {
 		launch(args);
 	}
