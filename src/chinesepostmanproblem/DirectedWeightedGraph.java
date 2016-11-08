@@ -7,11 +7,14 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import config.Configurations;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;
@@ -62,7 +65,7 @@ import util.TransformWeightDijkstra;
 public class DirectedWeightedGraph implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
-    DirectedGraph<Vertex, Edge> graph = new DirectedSparseMultigraph<>();
+    DirectedGraph<Vertex, Edge> graph = new DirectedSparseMultigraph<Vertex, Edge>();
     List<ClosestPathSolution> closestPathSolutions = new ArrayList<>();
     List<Vertex> eulerianPath = new ArrayList<>();
     List<VertexDegree> verticesDegree = new ArrayList<>();
@@ -249,7 +252,7 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
     
     public DirectedWeightedGraph visualizationOfGraph(DirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
     	DirectedWeightedGraph visualizationGraph = (DirectedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
+        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(Configurations.INITIAL_VERTEX));
         t1 = System.currentTimeMillis();
         visualizationGraph.displayGraph();
         return visualizationGraph;
@@ -741,6 +744,14 @@ public class DirectedWeightedGraph implements Cloneable, Serializable {
                 constraints.add(cplex.addEq(ils, (vertexDegree.getInDegree() - vertexDegree.getOutDegree())));
             }
         }
+    }
+    
+    public DirectedGraph<Vertex, Edge> getGraph() {
+        return graph;
+    }
+
+    public void setGraph(DirectedGraph<Vertex, Edge> graph) {
+        this.graph = graph;
     }
 
     private VertexDegree findVertexDegree(Vertex v) {

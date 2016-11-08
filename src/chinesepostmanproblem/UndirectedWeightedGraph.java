@@ -7,6 +7,8 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import config.Configurations;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
@@ -879,7 +881,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
     public UndirectedWeightedGraph visualizationOfGraph(UndirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
         UndirectedWeightedGraph visualizationGraph = (UndirectedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
+        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(Configurations.INITIAL_VERTEX));
         t1 = System.currentTimeMillis();
         visualizationGraph.displayGraph();
         return visualizationGraph;

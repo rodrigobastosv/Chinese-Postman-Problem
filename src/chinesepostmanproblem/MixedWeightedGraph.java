@@ -7,10 +7,13 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import config.Configurations;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
+import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
@@ -62,7 +65,7 @@ import util.TransformWeightDijkstra;
 public class MixedWeightedGraph implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	SparseMultigraph<Vertex, Edge> graph = new SparseMultigraph<>();
+	SparseMultigraph<Vertex, Edge> graph = new SparseMultigraph<Vertex, Edge>();
     List<ClosestPathSolution> closestPathSolutions = new ArrayList<>();
     List<Vertex> eulerianPath = new ArrayList<>();
     List<VertexDegree> verticesDegree = new ArrayList<>();
@@ -574,6 +577,14 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
         String s = variable.replace("X", "");
         return Integer.parseInt(s.substring(s.length() / 2, s.length()));
     }
+    
+    public SparseMultigraph<Vertex, Edge> getGraph() {
+        return graph;
+    }
+
+    public void setGraph(SparseMultigraph<Vertex, Edge> graph) {
+        this.graph = graph;
+    }
 
     public void printDiffDegreeInOut() {
         for (Vertex v : graph.getVertices()) {
@@ -699,7 +710,7 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
     
     public MixedWeightedGraph visualizationOfGraph(MixedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
     	MixedWeightedGraph visualizationGraph = (MixedWeightedGraph) graph.clone();
-        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(1));
+        visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(Configurations.INITIAL_VERTEX));
         t1 = System.currentTimeMillis();
         visualizationGraph.displayGraph();
         return visualizationGraph;

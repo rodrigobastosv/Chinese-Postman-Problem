@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.swing.JLabel;
+
 import chinesepostmanproblem.DirectedWeightedGraph;
 import chinesepostmanproblem.MixedWeightedGraph;
 import chinesepostmanproblem.UndirectedWeightedGraph;
@@ -24,6 +26,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -31,6 +35,8 @@ import javafx.stage.Stage;
 public class StartWindow extends Application {
 	File file;
 	static long t0, t1;
+	
+	/** GRAPHS **/
 	UndirectedWeightedGraph undirectedGraph = new UndirectedWeightedGraph();
 	DirectedWeightedGraph directedGraph = new DirectedWeightedGraph();
 	MixedWeightedGraph mixedGraph = new MixedWeightedGraph();
@@ -48,77 +54,67 @@ public class StartWindow extends Application {
 	Label lbPCCType = new Label("Tipo de PCC: ");
 	Label lbEdgeColor = new Label("Cor das Arestas: ");
 	Label lbGraphFile = new Label("Arquivo do Grafo: ");
-	Label lbEdgeThickness = new Label("Espessura da Arestas: ");
+	Label lbEdgeThickness = new Label("Espessura das Arestas: ");
+	Label lbInitialVertex = new Label("Vértice Inicial: ");
+	Label lbInitialVertexValue = new Label();
+
+	/** SCROLLS **/ 
+	ScrollBar edgeThicknessScroll = new ScrollBar();
 	
-	/** OUTROS **/
-	ObservableList<String> types = FXCollections.observableArrayList(
-	        "Não Dirigido",
-	        "Dirigido",
-	        "Misto");
-	ComboBox cbPCCType = new ComboBox(types);
+	/** COMBOS **/
+	ComboBox cbPCCType = new ComboBox();
+	ComboBox cbInitialVertex = new ComboBox();
 
 	ColorPicker edgesColor = new ColorPicker();
-	ScrollBar edgeThicknessScroll = new ScrollBar();
 	
 	public static void main(String args[]) {
 		launch(args);
 	}
 	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Problema do Carteiro Chinês");
-		
+	private void populateInitialVertexCb(File file) {
+		switch (cbPCCType.getValue().toString()) {
+		case "Não Dirigido":
+			try {
+				UndirectedWeightedGraph uGraph = new UndirectedWeightedGraph();
+				uGraph.readGraph(file.getAbsolutePath());
+				Configurations.setVertexCount(uGraph.getGraph().getVertexCount());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		case "Dirigido":
+			try {
+				DirectedWeightedGraph dGraph = new DirectedWeightedGraph();
+				dGraph.readGraph(file.getAbsolutePath());
+				Configurations.setVertexCount(dGraph.getGraph().getVertexCount());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		case "Misto":
+			try {
+				MixedWeightedGraph mGraph = new MixedWeightedGraph();
+				mGraph.readGraph(file.getAbsolutePath());
+				Configurations.setVertexCount(mGraph.getGraph().getVertexCount());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+	}
+	
+	private void configureButtons(Stage stage) {
 		btnGraphFile.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Escolha o arquivo com o grafo");
-				file = fileChooser.showOpenDialog(primaryStage);
+				file = fileChooser.showOpenDialog(stage);
 				btnGraphFile.setText(file.getName().length() > 30 ? file.getName().substring(0, 30) : file.getName());
 				btnInitialGraph.setDisable(false);
+				configureComboInitialVertex(file);
 			}
 		});
-		
-		btnReport.setDisable(true);
-		btnReport.setStyle(Configurations.BOLD_STYLE);
-		btnStart.setStyle(Configurations.BOLD_STYLE);
-		btnInitialGraph.setStyle(Configurations.BOLD_STYLE);
-
-		lbPCCType.setStyle(Configurations.BOLD_STYLE);
-		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
-		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
-		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
-		
-		cbPCCType.setValue("Não Dirigido");
-		
-		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
-		
-		edgeThicknessScroll.setMin(Configurations.MIN_THICKNESS);
-		edgeThicknessScroll.setMax(Configurations.MAX_THICKNESS);
-		
-		/** GRID **/
-		GridPane gridPane = new GridPane();
-		gridPane.setStyle(Configurations.WHITE_BACKGROUND);
-		gridPane.setHgap(20);
-		gridPane.setVgap(20);
-		gridPane.setTranslateX(20);
-		
-		gridPane.add(cbPCCType, 1, 0);
-		gridPane.add(lbPCCType, 0, 0);
-		
-		gridPane.add(lbGraphFile, 0, 1);
-		gridPane.add(btnGraphFile, 1, 1);
-		
-		gridPane.add(lbEdgeColor, 0, 2);
-		gridPane.add(edgesColor, 1, 2);
-		
-		gridPane.add(lbEdgeThickness, 0, 3);
-		gridPane.add(edgeThicknessScroll, 1, 3);
-		
-		gridPane.add(btnReport, 0, 5);
-		gridPane.add(btnStart, 0, 4);
-		gridPane.add(btnInitialGraph, 1, 4);
-		btnInitialGraph.setDisable(true);
 		
 		btnStart.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -130,6 +126,7 @@ public class StartWindow extends Application {
 				}
 				Configurations.EDGES_COLOR = edgesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
+				Configurations.INITIAL_VERTEX = Integer.parseInt(cbInitialVertex.getValue().toString());
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
 					try {
@@ -199,6 +196,7 @@ public class StartWindow extends Application {
 				case "Não Dirigido":
 					try {
 						undirectedGraph.readGraph(file.getAbsolutePath());
+						Configurations.setVertexCount(undirectedGraph.getGraph().getVertexCount());
 						undirectedGraph.imageOfGraph();
 					} catch (IOException  | InterruptedException e) {
 						e.printStackTrace();
@@ -207,6 +205,7 @@ public class StartWindow extends Application {
 				case "Dirigido":
 					try {
 						directedGraph.readGraph(file.getAbsolutePath());
+						Configurations.setVertexCount(directedGraph.getGraph().getVertexCount());
 						directedGraph.imageOfGraph();
 					} catch (IOException | InterruptedException e) {
 						e.printStackTrace();
@@ -215,6 +214,7 @@ public class StartWindow extends Application {
 				case "Misto":
 					try {
 						mixedGraph.readGraph(file.getAbsolutePath());
+						Configurations.setVertexCount(mixedGraph.getGraph().getVertexCount());
 						mixedGraph.imageOfGraph();
 					} catch (IOException | InterruptedException e) {
 						e.printStackTrace();
@@ -223,8 +223,92 @@ public class StartWindow extends Application {
 				}
 			}
 		});
-
-		Scene scene = new Scene(gridPane, Configurations.WINDOW_WIDHT, Configurations.WINDOW_HEIGHT);
+		
+		btnReport.setDisable(true);
+		btnReport.setStyle(Configurations.BOLD_STYLE);
+		btnStart.setStyle(Configurations.BOLD_STYLE);
+		btnInitialGraph.setStyle(Configurations.BOLD_STYLE);
+	}
+	
+	private void configureLabels() {
+		lbPCCType.setStyle(Configurations.BOLD_STYLE);
+		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
+		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
+		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
+		lbInitialVertex.setStyle(Configurations.BOLD_STYLE);
+	}
+	
+	private GridPane configureGrid() {
+		/** GRID **/
+		GridPane gridPane = new GridPane();
+		gridPane.setStyle(Configurations.WHITE_BACKGROUND);
+		gridPane.setHgap(20);
+		gridPane.setVgap(20);
+		gridPane.setTranslateX(20);
+		
+		gridPane.add(lbPCCType, 0, 0);
+		gridPane.add(cbPCCType, 1, 0);
+		
+		gridPane.add(lbGraphFile, 0, 1);
+		gridPane.add(btnGraphFile, 1, 1);
+		
+		gridPane.add(lbEdgeColor, 0, 2);
+		gridPane.add(edgesColor, 1, 2);
+		
+		gridPane.add(lbEdgeThickness, 0, 3);
+		gridPane.add(edgeThicknessScroll, 1, 3);
+		
+		gridPane.add(lbInitialVertex, 0, 4);
+		gridPane.add(cbInitialVertex, 1, 4);
+		
+		gridPane.add(btnReport, 0, 6);
+		gridPane.add(btnStart, 0, 5);
+		gridPane.add(btnInitialGraph, 1, 5);
+		
+		return gridPane;
+	}
+	
+	private void configureScrolls() {
+		edgeThicknessScroll.setMin(Configurations.MIN_THICKNESS);
+		edgeThicknessScroll.setMax(Configurations.MAX_THICKNESS);
+	}
+	
+	private void configureComboInitialVertex(File file) {
+		populateInitialVertexCb(file);
+		
+		String[] itensArray = new String[Configurations.VERTEX_COUNT];
+		Integer j;
+		for (Integer i=0 ; i<Configurations.VERTEX_COUNT ; i++) {
+			j = i+1;
+			itensArray[i] = j.toString();
+		}
+		ObservableList<String> vertices = FXCollections.observableArrayList(itensArray);
+		cbInitialVertex.setItems(vertices);
+		cbInitialVertex.setValue(1);
+	}
+	
+	private void configureCombos() {
+		ObservableList<String> CPPtypes = FXCollections.observableArrayList(
+		        "Não Dirigido",
+		        "Dirigido",
+		        "Misto");
+		cbPCCType.setItems(CPPtypes);
+		cbPCCType.setValue("Não Dirigido");
+	}
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		primaryStage.setTitle("Problema do Carteiro Chinês");
+		
+		configureLabels();
+		configureButtons(primaryStage);
+		configureCombos();
+		configureScrolls();
+		
+		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
+		btnInitialGraph.setDisable(true);
+		
+		Scene scene = new Scene(configureGrid(), Configurations.WINDOW_WIDHT, Configurations.WINDOW_HEIGHT);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
