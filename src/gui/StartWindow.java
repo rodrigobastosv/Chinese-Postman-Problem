@@ -223,11 +223,93 @@ public class StartWindow extends Application {
 				}
 			}
 		});
+
+		btnEulerianGraph.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
+				switch (cbPCCType.getValue().toString()) {
+				case "N�o Dirigido":
+					try {
+						UndirectedWeightedGraph graph = new UndirectedWeightedGraph();
+				        graph.readGraph(file.getAbsolutePath());
+				        if (!graph.isEulerian()) {
+				            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
+				            if (graph.isUseEdmondsAlgorithm()) {
+				                graph.findEulerianGraphUsingEdmonds(graph);
+				            } else {
+				                graph.findEulerianGraphUsingLinearProgramming(graph);
+				            }
+				        }
+				        graph.imageOfGraph();
+					} catch (IOException  | CloneNotSupportedException | IloException | InterruptedException e) {
+						e.printStackTrace();
+					}
+					break;
+				case "Dirigido":
+					DirectedWeightedGraph graph = new DirectedWeightedGraph();
+			        DirectedWeightedGraph differentDegreeVerticesGraph = new DirectedWeightedGraph();
+			        try {
+						graph.readGraph(file.getAbsolutePath());
+						if (!graph.isEulerian()) {
+				            graph.setClosestPathSolutions(graph.createListOfClosestPathSolutions());
+				            graph.setVerticesDegree(graph.createListOfVerticesDegree());
+
+				            differentDegreeVerticesGraph = (DirectedWeightedGraph) graph.clone();
+				            differentDegreeVerticesGraph.removeVerticesWithSameDegree();
+				            differentDegreeVerticesGraph.setClosestPathSolutions(graph.getClosestPathSolutions());
+				            differentDegreeVerticesGraph.addEdgesToCompleteGraph();
+				            differentDegreeVerticesGraph.setVerticesDegree(graph.getVerticesDegree());            
+				            differentDegreeVerticesGraph.generateSolveMathematicalModelCplex();
+				            
+				            graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
+				            graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
+				        }
+				        graph.imageOfGraph();
+					} catch (IOException | CloneNotSupportedException | IloException | InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					break;
+				case "Misto":
+			        MixedWeightedGraph graph1 = new MixedWeightedGraph();
+			        MixedWeightedGraph differentDegreeVerticesGraph1 = new MixedWeightedGraph();
+			        try {
+						graph1.readGraph(file.getAbsolutePath());
+				        graph1.transformInOriented();
+				        if (!graph1.isEulerian()) {
+				            graph1.setClosestPathSolutions(graph1.createListOfClosestPathSolutions());
+				            graph1.setVerticesDegree(graph1.createListOfVerticesDegree());
+
+				            differentDegreeVerticesGraph1 = (MixedWeightedGraph) graph1.clone();
+				            differentDegreeVerticesGraph1.removeVerticesWithSameDegree();
+				            differentDegreeVerticesGraph1.setClosestPathSolutions(graph1.getClosestPathSolutions());
+				            differentDegreeVerticesGraph1.addEdgesToCompleteGraph();
+				            differentDegreeVerticesGraph1.setVerticesDegree(graph1.getVerticesDegree());            
+				            differentDegreeVerticesGraph1.generateSolveMathematicalModelCplex();
+				            
+				            graph1.setResult(differentDegreeVerticesGraph1.getResult()); //put the result inside of the original graph            
+				            graph1.duplicateEdges(); //duplicate the edges to get an eulerian graph            
+				        }
+				        graph1.imageOfGraph();
+					} catch (IOException | CloneNotSupportedException | IloException | InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
+				}
+			}
+		});
+
 		
 		btnReport.setDisable(true);
+		btnInitialGraph.setDisable(true);
+		btnEulerianGraph.setDisable(true);
 		btnReport.setStyle(Configurations.BOLD_STYLE);
 		btnStart.setStyle(Configurations.BOLD_STYLE);
 		btnInitialGraph.setStyle(Configurations.BOLD_STYLE);
+		btnEulerianGraph.setStyle(Configurations.BOLD_STYLE);
 	}
 	
 	private void configureLabels() {
