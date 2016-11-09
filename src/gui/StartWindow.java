@@ -49,6 +49,7 @@ public class StartWindow extends Application {
 	Button btnGraphFile = new Button("Arquivo");
 	Button btnReport = new Button("Relatório");
 	Button btnInitialGraph = new Button("Grafo Inicial");
+	Button btnEulerianGraph = new Button("Grafo Euleriano");
 
 	/** LABELS **/
 	Label lbPCCType = new Label("Tipo de PCC: ");
@@ -112,6 +113,7 @@ public class StartWindow extends Application {
 				file = fileChooser.showOpenDialog(stage);
 				btnGraphFile.setText(file.getName().length() > 30 ? file.getName().substring(0, 30) : file.getName());
 				btnInitialGraph.setDisable(false);
+				btnEulerianGraph.setDisable(false);
 				configureComboInitialVertex(file);
 			}
 		});
@@ -230,7 +232,7 @@ public class StartWindow extends Application {
 				Configurations.EDGES_COLOR = edgesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
-				case "Nï¿½o Dirigido":
+				case "Não Dirigido":
 					try {
 						UndirectedWeightedGraph graph = new UndirectedWeightedGraph();
 				        graph.readGraph(file.getAbsolutePath());
@@ -346,6 +348,7 @@ public class StartWindow extends Application {
 		gridPane.add(btnReport, 0, 6);
 		gridPane.add(btnStart, 0, 5);
 		gridPane.add(btnInitialGraph, 1, 5);
+		gridPane.add(btnEulerianGraph, 1, 6);
 		
 		return gridPane;
 	}
@@ -388,7 +391,6 @@ public class StartWindow extends Application {
 		configureScrolls();
 		
 		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
-		btnInitialGraph.setDisable(true);
 		
 		Scene scene = new Scene(configureGrid(), Configurations.WINDOW_WIDHT, Configurations.WINDOW_HEIGHT);
 		primaryStage.setScene(scene);
@@ -406,7 +408,7 @@ public class StartWindow extends Application {
             } else {
                 graph.findEulerianGraphUsingLinearProgramming(graph);
             }
-        }        
+        }
         reportUndirectedGraph = graph.visualizationOfGraph(graph);
 	}
 	
