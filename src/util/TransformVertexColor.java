@@ -1,9 +1,10 @@
 package util;
 
 import entities.Vertex;
-import java.awt.Color;
 import java.awt.Paint;
 import org.apache.commons.collections15.Transformer;
+
+import config.Configurations;
 
 /**
  *
@@ -12,9 +13,6 @@ import org.apache.commons.collections15.Transformer;
 public class TransformVertexColor implements Transformer<Vertex, Paint> {
     
     public Paint transform(Vertex v) {
-        if(v.isVisited()) {
-            return Color.YELLOW;
-        }
-        return Color.RED;
+    	return Util.getNormalizedColor(Configurations.VERTICES_COLOR);
     }    
 }
