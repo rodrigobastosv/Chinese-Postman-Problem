@@ -22,6 +22,7 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel;
+import edu.uci.ics.jung.visualization3d.decorators.PickableVertexPaintTransformer;
 import entities.ClosestPathSolution;
 import entities.CplexResult;
 import entities.CplexResultVariable;
@@ -65,6 +66,7 @@ import util.TransformImageEdgeColor;
 import util.TransformVertexColor;
 import util.TransformVertexLabel;
 import util.TransformWeightDijkstra;
+import util.Util;
 
 public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
@@ -227,7 +229,8 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
         RenderContext ctx = vv.getRenderContext();
         ctx.setVertexLabelTransformer(new TransformVertexLabel());
-        ctx.setVertexDrawPaintTransformer(new TransformVertexColor());
+        ctx.setVertexFillPaintTransformer(new PickableVertexPaintTransformer<>(vv.getPickedVertexState(), 
+        		Util.getNormalizedColor(Configurations.VERTICES_COLOR), Color.YELLOW));
         VertexLabel<Vertex, Edge> vl = vv.getRenderer().getVertexLabelRenderer();
         vl.setPosition(Renderer.VertexLabel.Position.CNTR);
         ctx.setEdgeStrokeTransformer(new TransformEdgeStroke());
@@ -261,7 +264,7 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
 
         RenderContext ctx = vv.getRenderContext();
         ctx.setVertexLabelTransformer(new TransformVertexLabel());
-        ctx.setVertexDrawPaintTransformer(new TransformVertexColor());
+        ctx.setVertexFillPaintTransformer(new TransformVertexColor());
         Renderer.VertexLabel<Vertex, Edge> vl = vv.getRenderer().getVertexLabelRenderer();
         vl.setPosition(Renderer.VertexLabel.Position.CNTR);
         ctx.setEdgeStrokeTransformer(new TransformEdgeStroke());

@@ -29,6 +29,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -55,6 +56,7 @@ public class StartWindow extends Application {
 	Label lbPCCType = new Label("Tipo de PCC: ");
 	Label lbEdgeColor = new Label("Cor das Arestas: ");
 	Label lbGraphFile = new Label("Arquivo do Grafo: ");
+	Label lbVertexColor = new Label("Cor dos Vértices: ");
 	Label lbEdgeThickness = new Label("Espessura das Arestas: ");
 	Label lbInitialVertex = new Label("Vértice Inicial: ");
 	Label lbInitialVertexValue = new Label();
@@ -66,7 +68,9 @@ public class StartWindow extends Application {
 	ComboBox cbPCCType = new ComboBox();
 	ComboBox cbInitialVertex = new ComboBox();
 
+	/** COLORPICKERS **/ 
 	ColorPicker edgesColor = new ColorPicker();
+	ColorPicker verticesColor = new ColorPicker();
 	
 	public static void main(String args[]) {
 		launch(args);
@@ -127,6 +131,7 @@ public class StartWindow extends Application {
 					return;
 				}
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				Configurations.INITIAL_VERTEX = Integer.parseInt(cbInitialVertex.getValue().toString());
 				switch (cbPCCType.getValue().toString()) {
@@ -193,6 +198,7 @@ public class StartWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
@@ -230,6 +236,7 @@ public class StartWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
@@ -317,6 +324,7 @@ public class StartWindow extends Application {
 	private void configureLabels() {
 		lbPCCType.setStyle(Configurations.BOLD_STYLE);
 		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
+		lbVertexColor.setStyle(Configurations.BOLD_STYLE);
 		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
 		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
 		lbInitialVertex.setStyle(Configurations.BOLD_STYLE);
@@ -342,13 +350,16 @@ public class StartWindow extends Application {
 		gridPane.add(lbEdgeThickness, 0, 3);
 		gridPane.add(edgeThicknessScroll, 1, 3);
 		
-		gridPane.add(lbInitialVertex, 0, 4);
-		gridPane.add(cbInitialVertex, 1, 4);
+		gridPane.add(lbVertexColor, 0, 4);
+		gridPane.add(verticesColor, 1, 4);
 		
-		gridPane.add(btnReport, 0, 6);
-		gridPane.add(btnStart, 0, 5);
-		gridPane.add(btnInitialGraph, 1, 5);
-		gridPane.add(btnEulerianGraph, 1, 6);
+		gridPane.add(lbInitialVertex, 0, 5);
+		gridPane.add(cbInitialVertex, 1, 5);
+		
+		gridPane.add(btnReport, 0, 7);
+		gridPane.add(btnStart, 0, 6);
+		gridPane.add(btnInitialGraph, 1, 6);
+		gridPane.add(btnEulerianGraph, 1, 7);
 		
 		return gridPane;
 	}
@@ -381,6 +392,11 @@ public class StartWindow extends Application {
 		cbPCCType.setValue("Não Dirigido");
 	}
 	
+	private void configureColors() {
+		edgesColor.setValue(Color.GREEN);
+		verticesColor.setValue(Color.RED);
+	}
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Problema do Carteiro Chinês");
@@ -389,8 +405,7 @@ public class StartWindow extends Application {
 		configureButtons(primaryStage);
 		configureCombos();
 		configureScrolls();
-		
-		edgesColor.setValue(javafx.scene.paint.Color.GREEN);
+		configureColors();
 		
 		Scene scene = new Scene(configureGrid(), Configurations.WINDOW_WIDHT, Configurations.WINDOW_HEIGHT);
 		primaryStage.setScene(scene);
