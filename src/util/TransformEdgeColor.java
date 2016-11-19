@@ -14,13 +14,15 @@ import config.Configurations;
 public class TransformEdgeColor implements Transformer<Edge, Paint> {
     
     public Paint transform(Edge e) {
-    	javafx.scene.paint.Color color = Configurations.EDGES_COLOR;
-    	float RED = (float) color.getRed();
+    	javafx.scene.paint.Color color;
+        if(e.isVisited()) {
+        	color = Configurations.EDGES_ANIMATION_COLOR;
+        } else {
+        	color = Configurations.EDGES_COLOR;
+        }
+        float RED = (float) color.getRed();
     	float GREEN = (float) color.getGreen();
     	float BLUE = (float) color.getBlue();
-        if(e.isVisited()) {
-            return new Color(RED, GREEN, BLUE);
-        }
-        return Color.RED;
+    	return new Color(RED, GREEN, BLUE);
     }
 }
