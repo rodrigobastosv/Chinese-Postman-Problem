@@ -55,6 +55,7 @@ public class StartWindow extends Application {
 	/** LABELS **/
 	Label lbPCCType = new Label("Tipo de PCC: ");
 	Label lbEdgeColor = new Label("Cor das Arestas: ");
+	Label lbEdgeAnimationColor = new Label("Cor das Arestas (Animação): ");
 	Label lbGraphFile = new Label("Arquivo do Grafo: ");
 	Label lbVertexColor = new Label("Cor dos Vértices: ");
 	Label lbEdgeThickness = new Label("Espessura das Arestas: ");
@@ -70,6 +71,7 @@ public class StartWindow extends Application {
 
 	/** COLORPICKERS **/ 
 	ColorPicker edgesColor = new ColorPicker();
+	ColorPicker edgesAnimationColor = new ColorPicker();
 	ColorPicker verticesColor = new ColorPicker();
 	
 	public static void main(String args[]) {
@@ -131,6 +133,7 @@ public class StartWindow extends Application {
 					return;
 				}
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.EDGES_ANIMATION_COLOR = edgesAnimationColor.getValue();
 				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				Configurations.INITIAL_VERTEX = Integer.parseInt(cbInitialVertex.getValue().toString());
@@ -198,6 +201,7 @@ public class StartWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.EDGES_ANIMATION_COLOR = edgesAnimationColor.getValue();
 				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
@@ -236,6 +240,7 @@ public class StartWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				Configurations.EDGES_COLOR = edgesColor.getValue();
+				Configurations.EDGES_ANIMATION_COLOR = edgesAnimationColor.getValue();
 				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				switch (cbPCCType.getValue().toString()) {
@@ -324,6 +329,7 @@ public class StartWindow extends Application {
 	private void configureLabels() {
 		lbPCCType.setStyle(Configurations.BOLD_STYLE);
 		lbEdgeColor.setStyle(Configurations.BOLD_STYLE);
+		lbEdgeAnimationColor.setStyle(Configurations.BOLD_STYLE);
 		lbVertexColor.setStyle(Configurations.BOLD_STYLE);
 		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
 		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
@@ -347,19 +353,22 @@ public class StartWindow extends Application {
 		gridPane.add(lbEdgeColor, 0, 2);
 		gridPane.add(edgesColor, 1, 2);
 		
-		gridPane.add(lbEdgeThickness, 0, 3);
-		gridPane.add(edgeThicknessScroll, 1, 3);
+		gridPane.add(lbEdgeAnimationColor, 0, 3);
+		gridPane.add(edgesAnimationColor, 1, 3);
 		
-		gridPane.add(lbVertexColor, 0, 4);
-		gridPane.add(verticesColor, 1, 4);
+		gridPane.add(lbEdgeThickness, 0, 4);
+		gridPane.add(edgeThicknessScroll, 1, 4);
 		
-		gridPane.add(lbInitialVertex, 0, 5);
-		gridPane.add(cbInitialVertex, 1, 5);
+		gridPane.add(lbVertexColor, 0, 5);
+		gridPane.add(verticesColor, 1, 5);
 		
-		gridPane.add(btnReport, 0, 7);
-		gridPane.add(btnStart, 0, 6);
-		gridPane.add(btnInitialGraph, 1, 6);
-		gridPane.add(btnEulerianGraph, 1, 7);
+		gridPane.add(lbInitialVertex, 0, 6);
+		gridPane.add(cbInitialVertex, 1, 6);
+		
+		gridPane.add(btnReport, 0, 8);
+		gridPane.add(btnStart, 0, 7);
+		gridPane.add(btnInitialGraph, 1, 7);
+		gridPane.add(btnEulerianGraph, 1, 8);
 		
 		return gridPane;
 	}
@@ -393,7 +402,8 @@ public class StartWindow extends Application {
 	}
 	
 	private void configureColors() {
-		edgesColor.setValue(Color.GREEN);
+		edgesColor.setValue(Color.RED);
+		edgesAnimationColor.setValue(Color.GREEN);
 		verticesColor.setValue(Color.RED);
 	}
 	
