@@ -73,7 +73,6 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
     List<VertexDegree> verticesDegree = new ArrayList<>();
     IloCplex cplex;
     CplexResult result;
-    static long t0, t1;
 
     public void readGraph(String path) throws FileNotFoundException, IOException {
         FileReader file = new FileReader(path);
@@ -714,7 +713,6 @@ public class MixedWeightedGraph implements Cloneable, Serializable {
     public MixedWeightedGraph visualizationOfGraph(MixedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
     	MixedWeightedGraph visualizationGraph = (MixedWeightedGraph) graph.clone();
         visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(Configurations.INITIAL_VERTEX));
-        t1 = System.currentTimeMillis();
         visualizationGraph.displayGraph();
         return visualizationGraph;
     }

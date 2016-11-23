@@ -78,7 +78,6 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     CplexResult result;
     boolean useEdmondsAlgorithm;
     String rootDir = System.getProperty("user.dir");
-    static long t0, t1;
 
     public UndirectedWeightedGraph() {
     }
@@ -885,7 +884,6 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     public UndirectedWeightedGraph visualizationOfGraph(UndirectedWeightedGraph graph) throws InterruptedException, IOException, CloneNotSupportedException {
         UndirectedWeightedGraph visualizationGraph = (UndirectedWeightedGraph) graph.clone();
         visualizationGraph.setEulerianPath(graph.findEulerianPathFrom(Configurations.INITIAL_VERTEX));
-        t1 = System.currentTimeMillis();
         visualizationGraph.displayGraph();
         return visualizationGraph;
     }
