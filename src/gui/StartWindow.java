@@ -429,6 +429,7 @@ public class StartWindow extends Application {
                 graph.findEulerianGraphUsingLinearProgramming(graph);
             }
         }
+        t1 = System.currentTimeMillis();
         reportUndirectedGraph = graph.visualizationOfGraph(graph);
 	}
 	
@@ -451,6 +452,7 @@ public class StartWindow extends Application {
             graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
             graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
         }
+        t1 = System.currentTimeMillis();
         reportDirectedGraph = graph.visualizationOfGraph(graph);
 	}
 
@@ -474,6 +476,7 @@ public class StartWindow extends Application {
             graph.setResult(differentDegreeVerticesGraph.getResult()); //put the result inside of the original graph            
             graph.duplicateEdges(); //duplicate the edges to get an eulerian graph            
         }
+        t1 = System.currentTimeMillis();
         reportMixedGraph = graph.visualizationOfGraph(graph);
 	}
 }
