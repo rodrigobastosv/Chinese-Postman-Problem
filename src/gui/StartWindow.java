@@ -4,9 +4,6 @@ package gui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import javax.swing.JLabel;
-
 import chinesepostmanproblem.DirectedWeightedGraph;
 import chinesepostmanproblem.MixedWeightedGraph;
 import chinesepostmanproblem.UndirectedWeightedGraph;
@@ -26,8 +23,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.input.InputEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
