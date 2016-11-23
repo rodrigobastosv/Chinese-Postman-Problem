@@ -476,5 +476,4 @@ public class StartWindow extends Application {
         }
         reportMixedGraph = graph.visualizationOfGraph(graph);
 	}
-
 }
