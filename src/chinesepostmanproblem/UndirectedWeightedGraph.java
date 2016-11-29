@@ -97,14 +97,13 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         while (scanner.hasNext()) {
             int vertex1 = Integer.parseInt(scanner.next());
             int vertex2 = Integer.parseInt(scanner.next());
-            int weight = Integer.parseInt(scanner.next());
             if (!graph.containsVertex(getVertex(vertex1))) {
                 graph.addVertex(new Vertex(vertex1));
             }
             if (!graph.containsVertex(getVertex(vertex2))) {
                 graph.addVertex(new Vertex(vertex2));
             }
-            graph.addEdge(new Edge(getVertex(vertex1), getVertex(vertex2), weight),
+            graph.addEdge(new Edge(getVertex(vertex1), getVertex(vertex2)),
                     getVertex(vertex1), getVertex(vertex2), EdgeType.UNDIRECTED);
         }
         scanner.close();
