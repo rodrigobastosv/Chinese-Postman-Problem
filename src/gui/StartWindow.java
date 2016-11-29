@@ -49,6 +49,7 @@ public class StartWindow extends Application {
 
 	/** LABELS **/
 	Label lbPCCType = new Label("Tipo de PCC: ");
+	Label lbLayout = new Label("Layout dos Vértices: ");
 	Label lbEdgeColor = new Label("Cor das Arestas: ");
 	Label lbEdgeAnimationColor = new Label("Cor das Arestas (Animação): ");
 	Label lbGraphFile = new Label("Arquivo do Grafo: ");
@@ -62,6 +63,7 @@ public class StartWindow extends Application {
 	
 	/** COMBOS **/
 	ComboBox cbPCCType = new ComboBox();
+	ComboBox cbLayout = new ComboBox();
 	ComboBox cbInitialVertex = new ComboBox();
 
 	/** COLORPICKERS **/ 
@@ -199,6 +201,7 @@ public class StartWindow extends Application {
 				Configurations.EDGES_ANIMATION_COLOR = edgesAnimationColor.getValue();
 				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
+				Configurations.LAYOUT = cbLayout.getValue().toString();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
 					try {
@@ -238,6 +241,7 @@ public class StartWindow extends Application {
 				Configurations.EDGES_ANIMATION_COLOR = edgesAnimationColor.getValue();
 				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
+				Configurations.LAYOUT = cbLayout.getValue().toString();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
 					try {
@@ -311,7 +315,6 @@ public class StartWindow extends Application {
 			}
 		});
 
-		
 		btnReport.setDisable(true);
 		btnInitialGraph.setDisable(true);
 		btnEulerianGraph.setDisable(true);
@@ -329,6 +332,7 @@ public class StartWindow extends Application {
 		lbGraphFile.setStyle(Configurations.BOLD_STYLE);
 		lbEdgeThickness.setStyle(Configurations.BOLD_STYLE);
 		lbInitialVertex.setStyle(Configurations.BOLD_STYLE);
+		lbLayout.setStyle(Configurations.BOLD_STYLE);
 	}
 	
 	private GridPane configureGrid() {
@@ -360,10 +364,13 @@ public class StartWindow extends Application {
 		gridPane.add(lbInitialVertex, 0, 6);
 		gridPane.add(cbInitialVertex, 1, 6);
 		
-		gridPane.add(btnReport, 0, 8);
-		gridPane.add(btnStart, 0, 7);
-		gridPane.add(btnInitialGraph, 1, 7);
-		gridPane.add(btnEulerianGraph, 1, 8);
+		gridPane.add(lbLayout, 0, 7);
+		gridPane.add(cbLayout, 1, 7);
+		
+		gridPane.add(btnReport, 0, 9);
+		gridPane.add(btnStart, 0, 8);
+		gridPane.add(btnInitialGraph, 1, 8);
+		gridPane.add(btnEulerianGraph, 1, 9);
 		
 		return gridPane;
 	}
@@ -394,6 +401,15 @@ public class StartWindow extends Application {
 		        "Misto");
 		cbPCCType.setItems(CPPtypes);
 		cbPCCType.setValue("Não Dirigido");
+		
+		ObservableList<String> layoutTypes = FXCollections.observableArrayList(
+		"ISOM Layout",
+		"Circle Layout",
+		"FR Layout",
+		"FR2 Layout",
+		"KK Layout");
+		cbLayout.setItems(layoutTypes);
+		cbLayout.setValue("ISOM Layout");
 	}
 	
 	private void configureColors() {

@@ -9,8 +9,14 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import config.Configurations;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout2;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
+import edu.uci.ics.jung.algorithms.layout3d.SpringLayout;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.UndirectedSparseMultigraph;
@@ -210,7 +216,30 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     }
 
     public void displayGraph() throws InterruptedException {
-        Layout layout = new ISOMLayout(graph);
+        Layout layout = null;
+        switch (Configurations.LAYOUT) {
+		case "ISOM Layout":
+			layout = new ISOMLayout(graph);
+			break;
+		case "Circle Layout":
+			layout = new CircleLayout<Vertex, Edge>(graph);
+			break;
+		case "FR Layout":
+			layout = new FRLayout<>(graph);
+			break;
+		case "KK Layout":
+			layout = new KKLayout(graph);
+			break;
+		case "Spring Layout":
+			layout = (Layout) new SpringLayout<Vertex, Edge>(graph);
+			break;
+		case "Static Layout":
+			layout = new StaticLayout<>(graph);
+			break;
+		default:
+			break;
+		}
+        
         layout.setSize(new Dimension(700, 700)); // sets the initial size of the space        
 
         VisualizationViewer<Vertex, Edge> vv = new VisualizationViewer<>(layout);
@@ -244,7 +273,25 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
     }
     
     public void imageOfGraph() throws InterruptedException {
-        Layout layout = new ISOMLayout(graph);
+        Layout layout = null;
+        switch (Configurations.LAYOUT) {
+		case "ISOM Layout":
+			layout = new ISOMLayout(graph);
+			break;
+		case "Circle Layout":
+			layout = new CircleLayout<Vertex, Edge>(graph);
+			break;
+		case "FR Layout":
+			layout = new FRLayout<>(graph);
+			break;
+		case "FR2 Layout":
+			layout = new FRLayout2<>(graph);
+			break;
+		case "KK Layout":
+			layout = new KKLayout(graph);
+			break;
+		}
+        
         layout.setSize(new Dimension(700, 700)); // sets the initial size of the space        
 
         VisualizationViewer<Vertex, Edge> vv = new VisualizationViewer<>(layout);
@@ -275,7 +322,6 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         frame.pack();
         frame.setVisible(true);
     }
-
 
     public boolean isEulerian() {
         for (Vertex v : graph.getVertices()) {

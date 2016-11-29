@@ -16,7 +16,8 @@ public class Configurations {
 	public static String WHITE_BACKGROUND = "-fx-background: #FFFFFF;";
 	public static float MIN_THICKNESS = 1F;
 	public static float MAX_THICKNESS = 3F;
-	
+	public static String LAYOUT;
+
 	public static void setVertexCount(int vertexCount) {
 		VERTEX_COUNT = vertexCount;
 	}
