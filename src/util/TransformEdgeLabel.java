@@ -10,6 +10,6 @@ import org.apache.commons.collections15.Transformer;
 public class TransformEdgeLabel implements Transformer<Edge, String> {
     
     public String transform(Edge e) {
-        return String.valueOf(e.getWeight());
+        return "";
     }
 }
