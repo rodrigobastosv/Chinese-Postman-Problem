@@ -71,6 +71,7 @@ import util.TransformEdgeStroke;
 import util.TransformImageEdgeColor;
 import util.TransformVertexColor;
 import util.TransformVertexLabel;
+import util.TransformVertexStroke;
 import util.TransformWeightDijkstra;
 import util.Util;
 
@@ -97,14 +98,13 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         while (scanner.hasNext()) {
             int vertex1 = Integer.parseInt(scanner.next());
             int vertex2 = Integer.parseInt(scanner.next());
-            int weight = Integer.parseInt(scanner.next());
             if (!graph.containsVertex(getVertex(vertex1))) {
                 graph.addVertex(new Vertex(vertex1));
             }
             if (!graph.containsVertex(getVertex(vertex2))) {
                 graph.addVertex(new Vertex(vertex2));
             }
-            graph.addEdge(new Edge(getVertex(vertex1), getVertex(vertex2), weight),
+            graph.addEdge(new Edge(getVertex(vertex1), getVertex(vertex2)),
                     getVertex(vertex1), getVertex(vertex2), EdgeType.UNDIRECTED);
         }
         scanner.close();
@@ -309,13 +309,12 @@ public class UndirectedWeightedGraph implements Cloneable, Serializable {
         GraphZoomScrollPane pane = new GraphZoomScrollPane(vv);
 
         RenderContext ctx = vv.getRenderContext();
-        ctx.setVertexLabelTransformer(new TransformVertexLabel());
         ctx.setVertexFillPaintTransformer(new TransformVertexColor());
+        ctx.setVertexShapeTransformer(new TransformVertexStroke());
         Renderer.VertexLabel<Vertex, Edge> vl = vv.getRenderer().getVertexLabelRenderer();
         vl.setPosition(Renderer.VertexLabel.Position.CNTR);
         ctx.setEdgeStrokeTransformer(new TransformEdgeStroke());
         ctx.setEdgeDrawPaintTransformer(new TransformImageEdgeColor());
-        ctx.setEdgeLabelTransformer(new TransformEdgeLabel());
 
         JFrame frame = new JFrame();
         frame.getContentPane().add(vv);
