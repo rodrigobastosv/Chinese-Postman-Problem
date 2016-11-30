@@ -71,6 +71,7 @@ public class StartWindow extends Application {
 	ColorPicker edgesAnimationColor = new ColorPicker();
 	ColorPicker verticesColor = new ColorPicker();
 	
+	
 	public static void main(String args[]) {
 		launch(args);
 	}
