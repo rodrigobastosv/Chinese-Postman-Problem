@@ -134,6 +134,7 @@ public class StartWindow extends Application {
 				Configurations.VERTICES_COLOR = verticesColor.getValue();
 				Configurations.EDGES_THICKNESS = (float) edgeThicknessScroll.getValue();
 				Configurations.INITIAL_VERTEX = Integer.parseInt(cbInitialVertex.getValue().toString());
+				Configurations.LAYOUT = cbLayout.getValue().toString();
 				switch (cbPCCType.getValue().toString()) {
 				case "Não Dirigido":
 					try {
